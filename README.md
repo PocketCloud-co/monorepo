@@ -103,8 +103,8 @@ Install dependencies:
 ```bash
 $ npm install
 $ webpack
-$ go get github.com/kataras/iris/v12@v12.2.0-alpha
-$ go get -u github.com/go-bindata/go-bindata/...
+$ go get github.com/kataras/iris/v12@master
+$ go install github.com/go-bindata/go-bindata/v3/go-bindata@latest
 ```
 
 ## Run development

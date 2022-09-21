@@ -58,7 +58,7 @@ func NewApp(opts ...AppOptions) *App {
 	// everywhere, all routes, and even not founds.
 	//
 	// Logger, will execute the next and then log the request-response lifecycle.
-	ac := accesslog.File("./access.log") // its Close is handled on CTRL/CMD+C automatically.
+	ac := accesslog.File("./access.log") // its Close is handled on CTRL+C automatically.
 	srv.UseRouter(ac.Handler)
 	// Map app and uuid for every requests
 	srv.UseRouter(requestid.New())
