@@ -112,8 +112,12 @@ job.
 
 1. **Trust upgrades:** SDK-004/005 strict mode; CC-040 Shamir; CP-009
    cheater pinpointing; CC-050/SEC-004 external audit #1.
-2. **Supply expansion:** HA-001/HA-010 mobile tier (per DEVICE-RUNTIME.md);
-   HA-013 homelab containers; public host onboarding.
+2. **Supply expansion:** HA-010 mobile tier; HA-015 Android-TV/Fire-TV
+   variant (wall-powered, better-than-phone constraints); HA-014 Tier-W
+   web/WASM agent (zero-install onboarding funnel + Tizen/webOS reach);
+   HA-016 NAS/router packages; HA-013 homelab containers; public host
+   onboarding. Sealed ecosystems via OEM SDK partnerships (OQ-HA-03) when
+   MVP revenue proves the payout engine — see DEVICE-RUNTIME.md Addendum A.
 3. **New demand:** FT-06 LLM serving pilot (LS-001..LS-009); T3 kernels;
    storage product.
 4. **Scale hardening:** CP-010/CP-011 cells + placement perf; OO-008 churn

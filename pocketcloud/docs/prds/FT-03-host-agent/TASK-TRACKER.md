@@ -21,6 +21,9 @@
 | HA-011 | P1 | Fleet enrollment (org policy, many devices) | HA-007, MB-004 | one org policy applied to N devices; consolidated in FT-05 payout account | Proposed | |
 | HA-012 | P1 | Artifact parser fuzzing in CI (nightly) | HA-008 | fuzz corpus + coverage-guided run wired into PF-011 nightly; crashes are P0 defects | Proposed | |
 | HA-013 | P2 | Homelab container tier (Podman) for GPU workloads | HA-001, HA-003 | GPU kernel runs in rootless container with caps; only on explicitly-opted homelab tier | Proposed | |
+| HA-014 | P1 | Tier-W web/WASM agent spike | CC-031 (WASM build), CP-001 | browser tab runs a T1 share kernel end-to-end vs ephemeral coordinator at ≥40% native throughput; probation trust class enforced by placement; onboarding funnel concept validated with 3 testers (DEVICE-RUNTIME.md A.2) | Proposed | |
+| HA-015 | P1 | Android-TV/Fire-TV agent variant | HA-010 | native agent runs on 2 reference TV devices wall-powered 24/7; standby/thermal soak report; store-policy review for TV surfaces | Proposed | |
+| HA-016 | P2 | NAS/router packages (Synology, QNAP, OpenWrt) | HA-002, HA-013 | installable package per platform; caps honored; uptime telemetry confirms always-on profile | Proposed | |
 
 ## Change log
 
@@ -29,3 +32,8 @@
   tiered fleet M/D/H; homelab-first build order). HA-010 unblocked but
   sequenced as scale-out per MVP-PLAN; HA-013 (homelab OCI packaging) is
   packaging-not-security per the doc.
+- 2026-07-03: founder review of the supply matrix sustained in part —
+  DEVICE-RUNTIME.md Addendum A: Android-TV-class devices upgraded to YES for
+  MPC share work; Tier-W web/WASM agent added as fourth substrate; NAS/router
+  packages added; sealed assistants remain partnership-only (OQ-HA-03). New
+  tasks HA-014..HA-016. Diversity-is-the-product reframe recorded (A.3).

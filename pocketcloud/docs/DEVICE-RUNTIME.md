@@ -214,3 +214,75 @@ All model figures verified against live HuggingFace `config.json` (2026-07-03).
 ---
 
 *Prepared 2026-07-03 from verified device-landscape, runtime, sandboxing, resource-governance, and MoE-feasibility research plus a judged three-way design competition (Tiered Fleet selected; SISA and WASM-Everywhere grafts incorporated).*
+
+---
+
+## Addendum A (2026-07-03) — Expanding the addressable fleet: founder review
+
+Founder pushback on §2's supply matrix: consumer IoT devices have app stores,
+can run websites (hence WASM), and are generally small Linux/Android systems —
+they should not be blanket-disqualified. Review outcome: **partially
+sustained.** The matrix conflated "weak device" with "no code path." The
+corrected analysis splits four ways, and adds a strategic reframe.
+
+### A.1 Corrections to the supply matrix
+
+| Device class | Correction | Code path | Verdict (revised) |
+|---|---|---|---|
+| **Android TV / Google TV / Fire TV boxes & sticks** | Wrongly lumped with sealed TVs. These ARE Android: installable APKs, sideloading easier than phones, **wall-powered 24/7 (no battery/Doze pressure), often Ethernet, idle ~20 h/day, never in the user's hand** | Native agent (Tier-M build variant, TV form factor) | **YES for MPC-tier share work** — cents/day/device, but always-on and independence-rich (see A.3). Weak for LLM hosting (A55-class, 2–4 GB) |
+| **Samsung Tizen / LG webOS TVs** | "Zero" was right for *native* agents, wrong in general: their app stores accept **HTML5/JS apps — a WASM web agent is a real code path** | Tier-W web agent (A.2) | **Trickle with honesty**: TV app lifecycles suspend backgrounded apps and TVs sit in standby most of the day — compute only while the app is foregrounded. Useful, not transformative |
+| **NAS (Synology/QNAP) and open routers (GL.iNet, OpenWrt)** | Omitted. Real app stores / package managers / Docker; always-on Linux; homelab-adjacent owner profile | Tier-H package (native or OCI) | **YES** — small but high-uptime, high-trust supply |
+| **Echo/Alexa, Google Home/Nest, consoles, sealed TVs (Roku)** | Verdict stands on facts: Alexa "skills" execute in Amazon's cloud; the device is a thin client. **No store puts third-party background compute on the device** | None (jailbreaks are not a business) | **Partnership-only** — see A.4. Do not pitch as near-term supply |
+
+### A.2 Tier-W: the web/WASM agent (new, fourth substrate)
+
+A browser-delivered agent — WASM (+SIMD) kernels, WebSocket/WebTransport
+outbound (fits our dial-out-only architecture), WebCrypto + IndexedDB for
+identity and cache — runs the MPC template tier at roughly half native speed,
+which is acceptable for T1/T2 field math (integer ops, small memory).
+
+Where it actually pays:
+
+1. **Zero-friction host onboarding:** "earn from this tab right now, no
+   install" — the trial funnel that converts to the native agent. Likely its
+   highest-value use.
+2. **The only path onto Tizen/webOS TVs** (subject to the A.1 lifecycle
+   caveat).
+3. **Long-tail always-on screens:** kiosks, signage, lobby PCs.
+
+Honest limits: tab/app lifecycle (no true background), no raw sockets or
+filesystem (irrelevant to our shape), throttled timers on backgrounded tabs,
+weaker device identity (no keystore ⇒ lower placement trust class), and
+per-origin storage quotas for artifacts. Tier-W devices therefore enter the
+fleet as **probation-class share-holders**, never sole holders of a share
+index (consistent with F15).
+
+### A.3 Strategic reframe: diversity is the product, FLOPs are not
+
+The MPC tier's security economics improve with **the number of independent
+parties**, not with per-device FLOPs. Anti-collusion placement (master PRD
+§8.4) gets stronger with every unrelated household added; a $30 TV dongle
+holding one share and doing field arithmetic is a first-class citizen of the
+privacy fabric. Weak devices are weak *LLM hosts* but excellent
+*share-holders and verifiers*. Consequence for scheduling: capability-vector
+placement already handles this — MPC share slots flow to the vast weak fleet;
+LLM/expert slots flow to Tier-H/GPU. The "billions of devices" ambition is
+real for the *privacy fabric* first, the *compute fabric* second.
+
+### A.4 The actual billions-of-devices play: embedded SDK / OEM partnerships
+
+Sealed ecosystems (voice assistants, consoles, most TVs) open only from the
+inside: an **embeddable runtime SDK** (the same small Rust core; no
+privileged requirements; owner-consent and resource-cap hooks exposed to the
+OEM's UI) that device makers preinstall under a revenue share — turning their
+shipped fleets into monetizable assets and our supply curve into a BD motion
+rather than an install-by-install grind. This is a strategic bet with long
+sales cycles and real policy/consent design work; tracked as OQ-HA-03, not as
+near-term engineering.
+
+### A.5 Task and priority impact
+
+- New tasks: HA-014 (Tier-W web agent spike), HA-015 (Android-TV agent
+  variant), HA-016 (NAS/router packages), OQ-HA-03 (OEM SDK strategy).
+- MVP unchanged (desktop + homelab first — they pay); fleet-expansion tasks
+  join the scale-out backlog immediately after mobile.

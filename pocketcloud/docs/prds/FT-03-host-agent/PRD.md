@@ -88,3 +88,8 @@ deep-links to them).
   background-execution economics proven): mobile platform order.
 - **OQ-HA-02** (owner: eng; default: wasmtime): WASM engine choice (wasmtime
   vs WAMR on constrained devices) — decide with DEVICE-RUNTIME.md data.
+- **OQ-HA-03** (owner: founder; default: pursue after MVP revenue proves the
+  payout engine): embedded-SDK / OEM partnership program to reach sealed
+  ecosystems (voice assistants, TVs, consoles) — the credible
+  billions-of-devices path per DEVICE-RUNTIME.md Addendum A.4; BD motion
+  with consent/policy design, not near-term engineering.
