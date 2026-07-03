@@ -19,8 +19,10 @@ this CI/CD/QA-able.
 | Master PRD + Appendices (LLM serving, metering) | — | ✅ |
 | Engineering Standards (binding canon) | FT-00 | ✅ |
 | Hierarchical feature-PRD + task-tracker framework | FT-00 | ✅ |
-| CI pipeline running PoC suite on every PR | FT-00 (PF-001) | 🔨 |
-| Device runtime decision doc (runc question, per-tier substrates) | FT-03 | 🔨 |
+| CI pipeline running PoC suite on every PR | FT-00 (PF-001) | ✅ |
+| Device runtime decision doc (runc question, per-tier substrates) | FT-03 (HA-001) | ✅ |
+| Seam standard + registry (`SEAMS.md`), hosting DR-PF-03 ratified | FT-00 | ✅ |
+| MVP plan (binding execution order, `MVP-PLAN.md`, DR-PF-04) | FT-00 | ✅ |
 
 **Exit criteria:** PR checks green and blocking; all 9 feature PRDs populated
 with tasks; PoC demo + 19 tests pass in CI.

@@ -70,19 +70,27 @@ test) must each be rejected by CI — this meta-suite runs on pipeline changes.
 - **DR-PF-02 (2026-07-03):** Quality gates are code-reviewed infrastructure;
   no gate may be weakened to unblock a merge (Standards §0 restated here for
   grep-ability).
+- **DR-PF-03 (2026-07-03, founder-ratified):** Hosting split by failure
+  domain — **Cloudflare** for the fabric data plane (Workers/Durable
+  Objects/Queues/R2, agent connectivity), **Supabase Postgres** for business
+  records (ledger/registry/reputation/billing), **Vercel** for consoles and
+  marketing frontend. Rationale includes deliberate decoupling: Cloudflare
+  down ⇒ pages still up; Vercel down ⇒ fabric still running and metering.
+  Cross-vendor boundaries follow the binding seam standard (`docs/SEAMS.md`),
+  whose reference design is the metering seam (receipts durable in DO+R2,
+  queued to Postgres idempotently; Supabase outage = ledger lag, never loss;
+  payouts pause on stale watermark; projection rebuildable from the R2 log).
+  Resolves OQ-PF-01.
+- **DR-PF-04 (2026-07-03):** MVP-first sequencing — `docs/MVP-PLAN.md`
+  governs execution order across all trackers (waves + critical path);
+  tracker priorities express importance, MVP-PLAN expresses order. Scale-out
+  work does not start while an MVP wave is incomplete, except where idle
+  specialists have no MVP task available.
 
 ## 8. Open Questions
 
-- **OQ-PF-01** (owner: founder; proposed default below): **Control-plane
-  hosting: Cloudflare vs Supabase/Vercel.** Proposed default — split by
-  plane: **Cloudflare for the fabric data plane** (Workers + Durable Objects
-  for cell schedulers/relay/session state; R2 for share bundles — zero egress
-  fees are structural to unit economics; WebSocket hibernation for
-  million-agent connectivity) and **Supabase Postgres for business records**
-  (registry, ledger double-entry, reputation, billing — relational integrity
-  + RLS), with consoles on Vercel or Cloudflare Pages. If forced to one
-  vendor: Cloudflare (Postgres is fungible; R2 egress economics and DO-based
-  stateful edge are not). Ratify before CP-001.
+- ~~**OQ-PF-01**~~ — RESOLVED 2026-07-03 as **DR-PF-03** (Cloudflare data
+  plane / Supabase records / Vercel frontend, decoupled failure domains).
 - **OQ-PF-02** (owner: founder; default: GitHub Actions): CI vendor. Default
   GitHub Actions (repo already on GitHub); revisit only if runner cost or
   concurrency becomes limiting.

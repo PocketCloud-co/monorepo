@@ -8,7 +8,7 @@
 
 | ID | P | Title | Depends on | Acceptance criteria | Status | Artifacts |
 |----|---|-------|-----------|---------------------|--------|-----------|
-| LS-001 | P0 | Serving design detail doc (per-mode data flow, frame formats, failure modes) | HA-001 | reviewed doc; frame format versioned; failure matrix enumerated | Blocked(HA-001) | |
+| LS-001 | P0 | Serving design detail doc (per-mode data flow, frame formats, failure modes) | — | reviewed doc; frame format versioned; failure matrix enumerated; targets homelab/GPU tier per DEVICE-RUNTIME.md (2–4 tok/s WAN floor rules out consumer-device interactive serving) | Ready (scale-out per MVP-PLAN) | |
 | LS-002 | P0 | Model partitioner + signed artifact pipeline | LS-001, PF-008 | reference checkpoint → reproducible artifact set (golden hashes); manifest consumed by HA-008 in e2e | Proposed | |
 | LS-003 | P0 | Session scheduler (pipeline placement, KV pinning, standbys) | LS-001, CP-003 | pipeline placed within one cell on capable hosts; standby stages provisioned per policy | Proposed | |
 | LS-004 | P0 ⚠ | Relay service (sealed frame stitching + metering) | LS-001, OQ-PF-01 | relay cannot decrypt frames (test with instrumented build); frame meter events land in FT-05 fixture ledger | Proposed | |

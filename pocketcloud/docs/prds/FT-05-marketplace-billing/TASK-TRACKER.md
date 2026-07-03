@@ -8,7 +8,7 @@
 
 | ID | P | Title | Depends on | Acceptance criteria | Status | Artifacts |
 |----|---|-------|-----------|---------------------|--------|-----------|
-| MB-001 | P0 ⚠ | Ledger service: append-only double-entry (Postgres) | PF-003, OQ-PF-01 | property tests: invariant under generated interleavings; imbalance halts payouts + alerts; hash-chained entries | Blocked(OQ-PF-01) | |
+| MB-001 | P0 ⚠ | Ledger service: append-only double-entry (Supabase Postgres per DR-PF-03) | PF-003 | property tests: invariant under generated interleavings; imbalance halts payouts + alerts; hash-chained entries; **ledger is a projection of the R2 receipt log (SEAMS.md §4), never the only copy** | Ready | |
 | MB-002 | P0 ⚠ | Receipt ingestion + dual-signature verification | MB-001, CP-007 | invalid/duplicate/unverified receipts quarantined (never paid, never dropped); schema versioned jointly with FT-02 | Proposed | |
 | MB-003 | P0 | Pricing config service | MB-001 | per-template prices + payout rate + tier multipliers as founder-approved config; quote reconciliation test with CP-008 | Proposed | |
 | MB-004 | P0 ⚠ | Stripe Connect onboarding (hosts) | MB-001 | test-mode e2e: enroll → KYC state machine → account linked; per-account device caps enforced | Proposed | |
@@ -20,8 +20,11 @@
 | MB-010 | P0 | Customer console v0 | MB-006 | jobs, spend, budgets, verification-transcript download | Proposed | |
 | MB-011 | P1 | 1099/tax export | MB-005 | 1099-NEC/K data export matches ledger to the cent for fixture year | Proposed | |
 | MB-012 | P1 | Dispute flow from receipts | MB-006, SDK-009 | documented flow; both parties retrieve identical signed evidence bundle | Proposed | |
+| MB-013 | P0 ⚠ | Metering seam consumer + reconciliation + rebuild runbook | MB-001, CP-013 | idempotent queue consumer (ON CONFLICT DO NOTHING); hourly R2-log↔ledger reconciliation pages on divergence and freezes payouts; payout/invoice runs refuse on stale watermark; full ledger rebuild from R2 log rehearsed and documented | Proposed | |
 
 ## Change log
 
 - 2026-07-03: tracker created. PoC ledger semantics (verified-only pay,
   no-bill-on-reject, invariant) are the golden floor for MB-001/002/006.
+- 2026-07-03: DR-PF-03 ratified — MB-001 unblocked (Supabase Postgres);
+  added MB-013 (seam consumer, reconciliation, rebuild runbook per SEAMS.md).

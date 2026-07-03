@@ -141,3 +141,14 @@ Follow it literally.
    commit with a conventional message referencing the task ID.
 7. **Honesty:** report failures as failures. A red test you can't fix goes in
    the tracker as a defect with your analysis — not deleted, not hidden.
+
+## 8. Seam standard (cross-boundary durability & observability)
+
+Any data or state crossing a component, vendor, or failure-domain boundary
+is a **seam** and MUST implement the pattern in `docs/SEAMS.md` (binding):
+durable write-ahead at the producer, at-least-once delivery with idempotent
+consumers, bounded retry + DLQ, a documented degraded mode whose invariant is
+**lag never loss**, watermark/lag/DLQ metrics with budget alerts, continuous
+reconciliation against the source-of-truth log, and an explicit backpressure
+policy. New seams register in `docs/SEAMS.md` §3 before first production
+merge; every seam ships chaos + duplication tests (SEAMS §6).
