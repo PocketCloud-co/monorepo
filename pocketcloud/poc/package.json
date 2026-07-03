@@ -9,7 +9,7 @@
   },
   "scripts": {
     "demo": "node demo.js",
-    "test": "node --test test/crypto.test.js test/e2e.test.js",
+    "test": "node --test test/crypto.test.js test/e2e.test.js test/metering.test.js",
     "coordinator": "node src/coordinator/main.js",
     "worker": "node src/worker/main.js"
   },

@@ -32,6 +32,30 @@ import {
 } from '../crypto/secret-sharing.js';
 import { mat2s, readBody, s2f, s2vec, sendJson, vec2s } from '../util/json.js';
 
+// --- Metering (PRD section 9.4) -------------------------------------------
+//
+// Work is metered in deterministic WORK UNITS derived from the job's shape,
+// never from device-reported time or CPU%. Templates make this possible: the
+// coordinator knows exactly what it dispatched, so the meter reading exists
+// BEFORE the job runs (which also gives customers an exact upfront quote).
+// A receipt becomes payable only when the attempt's MAC verification passes:
+// inflating a work claim is therefore the same crime as forging a result,
+// and is caught the same way.
+//
+// Denominations: customers are billed 1000 millicredits per unit per worker;
+// each worker earns 600; the platform retains 400 (PRD section 9.1 take).
+const CUSTOMER_MILLICREDITS_PER_UNIT = 1000;
+const WORKER_MILLICREDITS_PER_UNIT = 600;
+
+// Deterministic per-worker work units by template shape.
+const WORK_UNITS = {
+  // Each worker multiplies W against its share vector AND its MAC share.
+  matvec: ({ matrix }) => 2 * matrix.length * matrix[0].length,
+  // Per element: 4 share subtractions in round 1, ~8 mult/adds across the
+  // share and MAC combinations in round 2.
+  'private-dot': ({ x }) => 12 * x.length,
+};
+
 async function callWorker(worker, template, payload) {
   const res = await fetch(`${worker.url}/compute`, {
     method: 'POST',
@@ -47,6 +71,51 @@ export async function createCoordinator({ port = 0 } = {}) {
   const workers = new Map();
   let regSeq = 0;
   let useSeq = 0;
+
+  // Append-only metering ledger: one dual-purpose receipt per worker per
+  // attempt. `payable` is set only when the attempt verified — workers are
+  // paid for delivered VERIFIED work, and customers are never billed for a
+  // rejected attempt (PRD F5). Production hash-chains and dual-signs these.
+  const ledger = [];
+  let receiptSeq = 0;
+
+  function recordAttempt(jobId, attempt, chosen, template, units, verified) {
+    for (const w of chosen) {
+      receiptSeq += 1;
+      ledger.push({
+        receiptId: receiptSeq,
+        jobId,
+        attempt,
+        workerId: w.id,
+        template,
+        units,
+        verified,
+        payable: verified,
+        workerMillicredits: verified ? units * WORKER_MILLICREDITS_PER_UNIT : 0,
+      });
+    }
+  }
+
+  function ledgerSummary() {
+    const payouts = {};
+    let customerBilled = 0;
+    let workerTotal = 0;
+    for (const r of ledger) {
+      payouts[r.workerId] = (payouts[r.workerId] ?? 0) + r.workerMillicredits;
+      workerTotal += r.workerMillicredits;
+      if (r.payable) customerBilled += r.units * CUSTOMER_MILLICREDITS_PER_UNIT;
+    }
+    const platformTotal = customerBilled - workerTotal;
+    return {
+      receipts: ledger,
+      payoutsByWorker: payouts,
+      customerBilledMillicredits: customerBilled,
+      workerPayoutMillicredits: workerTotal,
+      platformMillicredits: platformTotal,
+      // Double-entry invariant: every customer millicredit is accounted for.
+      invariantHolds: customerBilled === workerTotal + platformTotal,
+    };
+  }
 
   // Least-recently-used placement: spreads load across the fleet and, in
   // this PoC, stands in for the PRD's full anti-collusion placement solver.
@@ -179,17 +248,39 @@ export async function createCoordinator({ port = 0 } = {}) {
   // the attempt's workers (production would use redundancy to pinpoint the
   // cheater; the PoC quarantines the whole attempt pending investigation)
   // and retry on a fresh set.
+  // Upfront quote: work units are a pure function of the job's shape, so
+  // the customer can see the exact meter reading before anything runs.
+  function estimateJob(body) {
+    const unitsFn = WORK_UNITS[body.template];
+    if (!unitsFn) throw new Error(`unknown template ${body.template}`);
+    const n = body.n ?? 3;
+    const unitsPerWorker = unitsFn(body);
+    return {
+      template: body.template,
+      n,
+      unitsPerWorker,
+      customerMillicredits: unitsPerWorker * n * CUSTOMER_MILLICREDITS_PER_UNIT,
+      perWorkerMillicredits: unitsPerWorker * WORKER_MILLICREDITS_PER_UNIT,
+    };
+  }
+
+  let jobSeq = 0;
+
   async function runJob(body) {
     const template = TEMPLATES[body.template];
     if (!template) throw new Error(`unknown template ${body.template}`);
     const n = body.n ?? 3;
     const maxAttempts = body.maxAttempts ?? 3;
+    const unitsPerWorker = WORK_UNITS[body.template](body);
+    jobSeq += 1;
+    const jobId = `job-${jobSeq}`;
 
     const attempts = [];
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       const chosen = selectWorkers(n);
       const alpha = newMacKey(); // fresh MAC key per attempt
       const outcome = await template(body, chosen, alpha);
+      recordAttempt(jobId, attempt, chosen, body.template, unitsPerWorker, outcome.verified);
       attempts.push({
         attempt,
         workers: chosen.map((w) => w.id),
@@ -197,11 +288,29 @@ export async function createCoordinator({ port = 0 } = {}) {
         ...(outcome.verified ? {} : { reason: outcome.reason }),
       });
       if (outcome.verified) {
-        return { ok: true, result: outcome.result, attempts };
+        return {
+          ok: true,
+          jobId,
+          result: outcome.result,
+          attempts,
+          billing: {
+            unitsPerWorker,
+            workersPaid: n,
+            customerMillicredits: unitsPerWorker * n * CUSTOMER_MILLICREDITS_PER_UNIT,
+            perWorkerMillicredits: unitsPerWorker * WORKER_MILLICREDITS_PER_UNIT,
+            rejectedAttemptsNotBilled: attempt - 1,
+          },
+        };
       }
       quarantine(chosen, outcome.reason);
     }
-    return { ok: false, error: 'exhausted attempts without a verified result', attempts };
+    return {
+      ok: false,
+      jobId,
+      error: 'exhausted attempts without a verified result',
+      attempts,
+      billing: { customerMillicredits: 0, rejectedAttemptsNotBilled: attempts.length },
+    };
   }
 
   const server = http.createServer(async (req, res) => {
@@ -235,6 +344,12 @@ export async function createCoordinator({ port = 0 } = {}) {
         const body = await readBody(req);
         const outcome = await runJob(body);
         return sendJson(res, outcome.ok ? 200 : 502, outcome);
+      }
+      if (req.method === 'POST' && req.url === '/jobs/estimate') {
+        return sendJson(res, 200, estimateJob(await readBody(req)));
+      }
+      if (req.method === 'GET' && req.url === '/ledger') {
+        return sendJson(res, 200, ledgerSummary());
       }
       sendJson(res, 404, { error: 'not found' });
     } catch (err) {

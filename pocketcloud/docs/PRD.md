@@ -129,6 +129,8 @@ This is the *true* version of the founding claim "no subset of machines can comb
 | F14 | Posted-price model at launch (platform sets $/share-hour by device class); auction/spot later | P0 |
 | F15 | Reputation: stake-free, history-based (uptime, verified-result rate, speed). New devices start in "probation" — only redundant slots on jobs, never sole holders of a share index | P0 |
 | F16 | SLA tiers: Best-effort / Standard (r=2 redundancy) / Assured (r=3 + probation-free workers only) | P1 |
+| F17 | Deterministic metering: work units are a pure function of job shape (template + input sizes), computed by the platform at dispatch — never self-reported by devices; receipts become payable only on verified results (§9.4) | P0 |
+| F18 | Upfront exact quote: because F17 units are deterministic, every job gets a binding price quote before dispatch; burst rentals are pre-authorized against the quote | P0 |
 
 ### 6.4 Workload templates (launch set)
 
@@ -277,6 +279,21 @@ Phase 1 ships with a centralized coordinator — pragmatic, but it concentrates 
 
 ---
 
+### 9.4 Metering architecture — measuring usage on hardware nobody trusts
+
+Metering is the trust spine of the marketplace: hosts join to earn, customers pay for bursts, and neither side trusts the other's meter. The design principle: **never meter what a device claims; meter what the platform dispatched and verified.**
+
+1. **Deterministic work units.** Because workloads are templates (F17), the work content of a job is a pure function of its shape: a matvec of dimensions m×n over share+MAC streams is exactly 2·m·n field multiplications per worker; a length-k Beaver dot product is ~12·k operations; a stored share is its byte size × months. The coordinator computes the meter reading *at dispatch time* — device clocks, agent-reported CPU%, and host honesty are all irrelevant to the number of units. Side benefit (F18): the customer gets an exact, binding quote **before** the job runs — a materially better burst-rental experience than hyperscaler post-hoc billing surprises. For the later arbitrary-code tier, the WASM runtime's fuel metering (deterministic instruction counting) plays the same role.
+2. **Pay only for verified work.** A receipt becomes payable only when the attempt's MAC verification (or redundancy cross-check, per template) passes. This collapses metering fraud into result fraud, which the fabric already detects with probability 1−2⁻⁶¹ per corrupted value. A host cannot inflate earnings without forging results, and forging results is a losing game.
+3. **Dual-signed, hash-chained receipts.** Each receipt (job, share index, worker, units, result hash) is signed by the worker's device key and countersigned by the verifier, then appended to a hash-chained ledger. Host payouts and customer invoices reconcile to the *same* receipts, so disputes on either side resolve against one auditable record. **Double-entry invariant, continuously checked:** every customer millicredit = worker payouts + platform take; any imbalance halts payouts and pages engineering.
+4. **Time and speed are measured by the platform, not the device.** Latency = coordinator-observed round-trip timestamps. Device speed class = a signed, agent-run benchmark, continuously re-validated by **canary jobs** — known-answer workloads indistinguishable from real ones. Canaries catch both cheating (wrong answers) and idle-faking/throttling (a host advertising a class it doesn't deliver gets re-classed and re-priced, not paid for phantom capacity).
+5. **Bandwidth and storage.** All share traffic transits platform rendezvous points (agents only dial out), so byte counts are platform-observed on infrastructure we run. Storage-months are payable only while random proof-of-retrievability challenges keep passing.
+6. **Failed attempts.** Customers are never billed for rejected attempts (F5). Honest workers caught in a quarantined attempt also receive nothing for it — strict "verified work only" keeps the rule simple and un-gameable; the expected cost of collateral quarantine is priced into the platform take, and reputation restoration (production pinpoints cheaters via redundancy) limits how often honest hosts are hit.
+7. **Phones and small devices.** Mobile agents run only on Wi-Fi + charging by default (owner-configurable), with thermal/battery guards; OS attestation (Play Integrity / App Attest) raises the cost of emulated Sybil fleets; earnings accrue as micro-payouts and disburse above a threshold so payment-rail fees don't eat the host's margin.
+8. **Anti-gaming backstop.** Statistical monitors flag physically implausible performance (completing faster than the device class allows), payout escrow windows allow clawback on late-detected fraud, and per-account device caps limit Sybil blast radius until history accrues (§9.2).
+
+*PoC note:* items 1, 2, 3 (units, pay-on-verify, double-entry invariant) and the upfront quote are implemented and tested in `pocketcloud/poc/` — see Appendix A.
+
 ## 10. Legal, Compliance, Abuse
 
 ### 10.1 Host protection (as important as customer privacy)
@@ -351,6 +368,24 @@ The proof of concept in `pocketcloud/poc/` implements, in dependency-free Node.j
 | Host agent computing on shares only (§5, F10 conceptually) | `src/worker/server.js` |
 | Malicious-host detection demo (F5) | `--tamper` flag on a worker; demo shows MAC failure catching it |
 | Fixed-point real-number encoding (§7.2) | `src/crypto/encoding.js` |
-| Customer SDK/CLI (F1) | `src/client/submit.js`, `demo.js` |
+| Customer SDK/CLI (F1) | `src/client/client.js`, `demo.js` |
+| Deterministic work units + upfront quote (F17, F18, §9.4) | `WORK_UNITS` / `POST /jobs/estimate` in `src/coordinator/coordinator.js` |
+| Pay-only-on-verified receipts, per-worker payouts, double-entry invariant (§9.4) | metering ledger + `GET /ledger` in `src/coordinator/coordinator.js`; `test/metering.test.js` |
 
 Run instructions: `pocketcloud/poc/README.md`.
+
+---
+
+## Appendix B — Serving GLM-class LLMs on the fabric
+
+Full MPC inference of a frontier-scale MoE model (hundreds of GB of weights, 60+ layers, autoregressive token loops) is not feasible on WAN-connected consumer devices: nonlinearities cost interactive rounds under MPC, and generation would need thousands of sequential round trips per token. Instead, large open-weight models (GLM, Llama, DeepSeek class) run on the same fabric in **three modes** along a privacy/performance spectrum:
+
+**Mode 1 — Distributed serving, transport-private.** Petals-style sharding: the model is split by transformer blocks and — because these models are MoE — by *experts* across hosts; activations flow through a pipeline of devices over mTLS. MoE is a structural gift for edge serving: only a few experts activate per token, so each host serves a handful of experts on commodity hardware, and aggregate fleet memory is what matters, not any single box. Privacy here is trust dispersion (no single party sees the whole computation, anti-collusion placement applies to pipeline stages), **not** cryptography — activations can leak information about inputs, and public docs must say so.
+
+**Mode 2 — The sandwich (flagship).** The customer SDK runs the model's *edges* locally: tokenizer + embedding layer on input, final LM head + sampling on output. The fabric runs only the middle blocks. Consequences: raw tokens never leave the customer in either direction — the fabric streams final hidden states (~10–30 KB/token) back to the SDK, which decodes them locally, so the fabric never learns which words went in **or came out**. Client-side cost is small (embedding/unembedding is a tiny fraction of total weights).
+
+**Mode 3 — MPC, applied surgically.** The T1 `matvec` template is exactly a transformer linear layer over secret-shared activations with public weights. Viable today for batch, latency-tolerant jobs on small models (embeddings, classifiers, rerankers, LoRA-scale heads) and for private sub-steps (e.g., secret-shared retrieval scoring) feeding a Mode-2 session. The full-model MPC boundary moves as MPC-friendly nonlinearity protocols mature; the fabric doesn't change, templates do.
+
+**Session scheduling.** LLM serving lands on the capable-supply tier (P2/P3: homelab GPUs, MSP fleets); conversations are pinned to a pipeline group within one geographic cell so the KV cache stays resident; a dropped stage is recovered by re-prefilling on a standby replica (redundancy factor r applied to pipeline stages).
+
+**Response delivery.** Hosts only ever dial out, so no NAT traversal into homes. Batch/MPC jobs return result *shares* via store-and-forward — the response never exists as an assembled whole anywhere in transit; it materializes for the first time inside the originator's SDK at reassembly. Interactive sessions use a thin per-cell **relay**: client and final pipeline stage both hold outbound QUIC/WebSocket connections, and the relay stitches sealed frames it cannot read (in Mode 2 the frames are hidden states, not text). Relay frame counts double as the session meter (§9.4). Integrity in Modes 1–2 is redundant spot-checking + reputation (probabilistic detection), not MACs — an honest gap versus Mode 3, stated in the docs.

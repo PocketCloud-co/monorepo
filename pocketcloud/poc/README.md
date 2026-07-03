@@ -17,6 +17,7 @@ Pocket Cloud claim from [`../docs/PRD.md`](../docs/PRD.md):
 | SPDZ-style information-theoretic MACs | `src/crypto/secret-sharing.js` | §7.2, G2 |
 | Beaver-triple multiplication (secret × secret) | `src/crypto/beaver.js` | §6.4 T3 |
 | Coordinator: registry, LRU placement, dealer, verifier, quarantine + re-dispatch | `src/coordinator/coordinator.js` | §8.1–8.2 |
+| Metering: deterministic work units, upfront quote, pay-only-on-verified receipts, double-entry ledger | `src/coordinator/coordinator.js` (`WORK_UNITS`, `/jobs/estimate`, `/ledger`) | §9.4, F17–F18 |
 | Host agent: computes kernels **on shares only**, stateless, optional tamper mode | `src/worker/worker.js` | §5, F10 |
 | Customer SDK | `src/client/client.js` | F1/F4 |
 
@@ -41,20 +42,25 @@ probability per corrupted value: 1 − 2⁻⁶¹.
 ```bash
 cd pocketcloud/poc
 
-node demo.js      # the full 3-act demo (see below)
-node --test test/ # 15 unit + end-to-end protocol tests
+node demo.js   # the full 4-act demo (see below)
+npm test       # 19 unit + end-to-end protocol tests
 ```
 
 The demo:
 
 1. **Private inference** — a model layer is applied to a private input across
    3 hosts; result matches plaintext to fixed-point precision; the demo
-   prints the literal noise a host sees instead of your data.
+   prints the literal noise a host sees instead of your data — and the exact
+   price quote, computed *before* dispatch.
 2. **Private similarity** — two private vectors are multiplied without either
    ever existing on any host.
 3. **Malicious host** — `host-MALLORY` joins and corrupts its result share.
    The MAC check rejects the attempt, the coordinator quarantines it and
    re-dispatches to fresh hosts, and the job completes correctly anyway.
+4. **Metering** — per-host earnings ledger: verified work pays (60% to the
+   host), the rejected attempt bills the customer nothing, MALLORY's receipt
+   exists but is worth zero, and the double-entry invariant (customer billed
+   = host payouts + platform take) balances to the millicredit.
 
 ### Run it as actual separate processes
 

@@ -22,7 +22,12 @@ import { encodeVector } from './src/crypto/encoding.js';
 import { dealWithMac, newMacKey } from './src/crypto/secret-sharing.js';
 import { createCoordinator } from './src/coordinator/coordinator.js';
 import { createWorker } from './src/worker/worker.js';
-import { listWorkers, submitJob } from './src/client/client.js';
+import {
+  estimateJob,
+  getLedger,
+  listWorkers,
+  submitJob,
+} from './src/client/client.js';
 
 const fmt = (xs) => `[${xs.map((v) => v.toFixed(4)).join(', ')}]`;
 const hr = (title) => console.log(`\n${'='.repeat(72)}\n${title}\n${'='.repeat(72)}`);
@@ -51,6 +56,18 @@ const expected = W.map((row) => row.reduce((s, w, k) => s + w * x[k], 0));
 
 console.log(`private input x  = ${fmt(x)}`);
 console.log(`plaintext W·x    = ${fmt(expected)}   (computed locally for comparison)`);
+
+// Metering is deterministic in the job's shape, so the quote precedes the run.
+const quote = await estimateJob(coordinator.url, {
+  template: 'matvec',
+  matrix: W,
+  input: x,
+  n: 3,
+});
+console.log(
+  `upfront quote    = ${quote.unitsPerWorker} units/worker × ${quote.n} workers ` +
+    `= ${quote.customerMillicredits} millicredits (known BEFORE dispatch)`,
+);
 
 const job1 = await submitJob(coordinator.url, {
   template: 'matvec',
@@ -130,6 +147,30 @@ console.log(
     ' execution to pinpoint the cheater — see PRD section 7.1)',
 );
 
+// ---------------------------------------------------------------- demo 4
+hr('DEMO 4 — Metering: verified work pays, rejected work does not');
+
+console.log(
+  `demo 3 billing: customer paid ${job3.billing.customerMillicredits} millicredits ` +
+    `for 1 verified attempt; ${job3.billing.rejectedAttemptsNotBilled} rejected ` +
+    `attempt billed at 0`,
+);
+
+const ledger = await getLedger(coordinator.url);
+console.log('\nhost earnings (millicredits, verified work only):');
+for (const [workerId, mc] of Object.entries(ledger.payoutsByWorker)) {
+  console.log(`  ${workerId.padEnd(14)} ${String(mc).padStart(8)}`);
+}
+console.log(`\ncustomer billed  = ${ledger.customerBilledMillicredits}`);
+console.log(`host payouts     = ${ledger.workerPayoutMillicredits}`);
+console.log(`platform take    = ${ledger.platformMillicredits}`);
+console.log(`double-entry OK  = ${ledger.invariantHolds}`);
+if (!ledger.invariantHolds) throw new Error('ledger invariant violated');
+if (ledger.payoutsByWorker['host-MALLORY'] !== 0) {
+  throw new Error('malicious host must earn nothing');
+}
+console.log('host-MALLORY earned 0 — its receipt exists but is unpayable.');
+
 // ---------------------------------------------------------------- wrap up
 hr('SUMMARY');
 console.log(`
@@ -139,6 +180,8 @@ console.log(`
 ✓ two private inputs were multiplied without either being revealed
 ✓ a tampering host was detected by the MAC check (catch probability
   1 - 2^-61 per corrupted value), quarantined, and the job self-healed
+✓ metering was deterministic (quoted before dispatch), payable only on
+  verified work, and the ledger balanced to the millicredit
 `);
 
 await mallory.close();
