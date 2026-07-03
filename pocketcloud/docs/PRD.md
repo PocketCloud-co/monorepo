@@ -76,6 +76,7 @@ This gives AI and data teams a third option beyond (a) hyperscaler clouds they d
 - **P4 "Compliance-Constrained Clara" (customer, ML lead at a healthcare/legal/finance SMB).** Has batch inference and embedding jobs over sensitive documents. Blocked by counsel from sending plaintext to third-party APIs. Will pay a premium for a provable "no plaintext ever leaves your VPC" story.
 - **P5 "Cost-Squeezed Carlos" (customer, indie AI developer).** Needs cheap batch embeddings/rendering; privacy is a bonus. Price-sensitive filler demand that keeps utilization up.
 - **P6 "Sovereign Sam" (customer, public sector / research).** Procurement requires demonstrable independence from US hyperscalers and/or data-residency pinning ("shares never leave Country X").
+- **P7 "Private-Pool Petra" (customer AND supplier, enterprise IT lead).** Runs 200–20,000 MDM-managed corporate devices that idle 16+ hours a day while her AI budget fights for scarce datacenter capacity. Wants Pocket Cloud deployed to her own fleet via Intune/Jamf as a **private pool**: her workloads only, her devices only, SSO-governed, with showback reporting instead of payouts. Buys as SaaS licensing, not a marketplace. The MSP channel (P3 relationships) sells and operates this. Strategically first-class: private pools are the enterprise wedge — and hybrid burst turns them into public-fabric demand and supply later.
 
 ---
 
@@ -88,6 +89,25 @@ Pocket Cloud consists of five product surfaces:
 3. **Customer Console + SDK/API** — job submission (Python/TS SDKs, REST), budget controls, residency and threshold policy ("shares split 5 ways, tolerance for 2 colluding, EU-only devices"), observability (job status, verification proofs, spend).
 4. **Host Console** — earnings, device health, resource policy, tax documents.
 5. **Marketplace layer** — pricing, matching, reputation, SLAs.
+
+### 5.0 Tenancy modes (one fabric, three deployments)
+
+The same fabric software serves three tenancy modes; mode is a property of a
+**pool**, and every job names the pool policy it may place into:
+
+| Mode | Supply | Demand | Money | Trust posture |
+|---|---|---|---|---|
+| **Public marketplace** | strangers' devices | any customer | metered billing → host payouts | full protocol: shares, MACs, anti-collusion, canaries |
+| **Private pool** | one org's MDM-managed fleet | that org only (SSO/API keys scoped to the pool) | SaaS license + showback/chargeback reports; payouts optional | same verification + metering machinery (integrity and capacity accounting still matter on owned hardware); anti-collusion constraints relaxed by policy |
+| **Hybrid burst** | private pool first | that org | private work unmetered-cost; burst portion billed | jobs overflow to the public fabric only under an explicit org policy (privacy params, residency, budget) |
+
+Placement scoping is a **hard constraint, not a preference**: a private
+pool's devices are never eligible for public work, and a private pool's jobs
+never leave it without a burst policy. For corporate-owned devices, the
+"owner" whose resource caps are sovereign (DR-HA-02) is the **organization**
+via MDM policy; the agent shows employees a transparency notice of what runs
+and when. Enterprises adopt via silent-install packages (MSI/PKG/policy
+profiles) with org enrollment tokens — no per-employee onboarding.
 
 ### 5.1 The core user promise, stated precisely
 
@@ -131,6 +151,10 @@ This is the *true* version of the founding claim "no subset of machines can comb
 | F16 | SLA tiers: Best-effort / Standard (r=2 redundancy) / Assured (r=3 + probation-free workers only) | P1 |
 | F17 | Deterministic metering: work units are a pure function of job shape (template + input sizes), computed by the platform at dispatch — never self-reported by devices; receipts become payable only on verified results (§9.4) | P0 |
 | F18 | Upfront exact quote: because F17 units are deterministic, every job gets a binding price quote before dispatch; burst rentals are pre-authorized against the quote | P0 |
+| F19 | Private pools (§5.0): org-scoped tenancy as a hard placement constraint — pool devices never serve public work; pool jobs never leave the pool absent an explicit burst policy | P0 (MVP) |
+| F20 | Enterprise fleet deployment: silent-install packages (MSI/PKG/config profiles) + org enrollment tokens for MDM (Intune/Jamf/RMM); org-level policy is the sovereign owner policy on corporate devices, with an employee-facing transparency notice | P0 (MVP) |
+| F21 | Showback/chargeback: the same receipts/ledger machinery renders per-team/per-project internal usage reports for private pools; Stripe payouts optional per pool | P0 (MVP) |
+| F22 | Hybrid burst: org policy (privacy params, residency, budget) governs overflow from private pool to public fabric | P1 (post-MVP) |
 
 ### 6.4 Workload templates (launch set)
 
@@ -353,6 +377,7 @@ Hosts are independent contractors; Stripe Connect handles 1099-K/1099-NEC. Inter
 - **DR-05 (2026-07-03):** The collusion threshold qualifier is always stated. No absolute-security marketing.
 - **DR-06 (2026-07-03):** Nothing merges without the full test + regression gate sequence; the gates are CI-enforced and may not be weakened to unblock work. Canon: `ENGINEERING-STANDARDS.md`.
 - **DR-07 (2026-07-03):** All work is defined ahead of execution in the hierarchical feature-PRD framework (`docs/prds/`) with task IDs, dependencies, and acceptance criteria, so delegated agents — of any capability tier — execute from self-contained specs.
+- **DR-08 (2026-07-03, founder decision):** Private pools (§5.0, F19–F21) are MVP scope. Rationale: enterprise fleets via MDM remove the marketplace's hardest launch problems (stranger payouts, stranger trust, consumer install friction) while datacenter capacity/power scarcity makes "your idle corporate fleet is a private compute pool" immediately sellable — through the MSP channel we already have. The public marketplace remains the destination; private pools are the wedge, and hybrid burst (F22) is the bridge.
 
 ---
 

@@ -21,6 +21,7 @@
 | CP-011 | P1 | Placement perf target | CP-003 | nightly load run: n=1000 placement < 5 s at 10⁵ simulated devices | Proposed | |
 | CP-012 | P1 ⚠ | Transparency log of placement decisions | CP-010 | append-only, hash-chained, externally verifiable; documented verification procedure | Proposed | |
 | CP-013 | P0 ⚠ | Metering seam producer: receipts in DO txn + R2 hash-chained log + Queue enqueue | CP-007 | SEAMS.md §4 flow implemented; chaos test (Supabase down mid-flow) shows zero loss after drain; duplication test passes; watermark metrics exported | Proposed | |
+| CP-014 | P0 ⚠ | Pool tenancy in placement (F19, MVP per DR-08) | CP-003 | pool_id is a hard placement constraint: property test proves no cross-pool placement in either direction; private-pool jobs with no burst policy fail fast rather than leak to public; org-scoped API keys enforced at job intake | Proposed | |
 
 ## Change log
 

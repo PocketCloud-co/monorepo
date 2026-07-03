@@ -13,9 +13,13 @@ bill that equals the quote.
 **A host (desktop / MSP fleet) can:** install the agent in minutes, set
 resource caps that are actually respected, earn for verified work, and get
 paid real money through Stripe.
+**An enterprise can (DR-08):** deploy the agent silently to its MDM-managed
+corporate fleet, get a **private pool** that runs only its own workloads on
+only its own devices, and see per-team showback from the same metering —
+no payouts required, SaaS-licensed.
 **The platform can:** detect and quarantine a cheating host automatically,
-meter every unit of work durably across the Cloudflare→Supabase seam, and
-prove the books balance.
+meter every unit of work durably across the Cloudflare→Supabase seam, prove
+the books balance, and prove pool isolation (no cross-pool placement, ever).
 
 Everything else is scale-out.
 
@@ -75,7 +79,9 @@ Done per the Definition of Done.
 | HA-005 | device identity/attestation |
 | HA-007 | owner policy UX (tray) |
 | HA-009 | churn resilience |
+| CP-014 | pool tenancy in placement (private pools, DR-08) |
 | SDK-001, SDK-002, SDK-003 | Python SDK: lifecycle, quotes/budgets, idempotency |
+| SDK-010 | pool targeting + org auth |
 
 ### Wave 3 — Money (the seam, the ledger, the payouts)
 | Task | What |
@@ -87,6 +93,7 @@ Done per the Definition of Done.
 | MB-003 | pricing config |
 | MB-004, MB-005 | Stripe onboarding + payout runs (escrow) |
 | MB-006 | customer billing (quote==bill, no-bill-on-reject) |
+| MB-014 | private-pool showback/chargeback + SaaS license line |
 | OO-010 | seam observability pack |
 
 ### Wave 4 — Trust & launchability
@@ -95,7 +102,8 @@ Done per the Definition of Done.
 | PF-008 | reproducible signed agent builds |
 | HA-006 | signed auto-update |
 | HA-008 | artifact cache |
-| HA-011 | fleet (MSP) enrollment |
+| HA-011 | fleet (org) enrollment — org-sovereign policy + transparency notice |
+| HA-017 | MDM silent-install packages + org enrollment tokens |
 | OO-002..OO-006 | dashboards, SLOs, canaries (OO-004), alerting, runbooks |
 | MB-007, MB-008 | reputation + fraud v0 |
 | MB-009, MB-010 | minimal consoles (Vercel) |
@@ -103,10 +111,12 @@ Done per the Definition of Done.
 | SEC-005, SEC-006 | KYC policy + legal pack v1 |
 | PF-011, OO-007 | chaos harness + seam chaos suite |
 
-**MVP exit = ROADMAP M2 exit criteria:** 10 real jobs/week for design
-partners; a real host paid real money; 100% injected-fault detection;
-reconciliation clean for 30 consecutive days; quote==bill on every verified
-job.
+**MVP exit = ROADMAP M2 exit criteria plus (DR-08):** 10 real jobs/week for
+design partners; a real host paid real money; **one real enterprise private
+pool live on ≥20 MDM-deployed corporate devices running that org's internal
+jobs with showback**; 100% injected-fault detection; pool-isolation property
+tests green; reconciliation clean for 30 consecutive days; quote==bill on
+every verified job.
 
 ## 3. Scale-out backlog (post-MVP, in rough order)
 
@@ -136,3 +146,6 @@ job.
 
 ## Change log
 - 2026-07-03: created; ratified as DR-PF-04.
+- 2026-07-03: DR-08 — private pools added to MVP (CP-014, SDK-010, MB-014,
+  HA-011→P0, HA-017); MVP definition + exit criteria extended with the
+  enterprise private-pool scenario; hybrid burst (F22) remains post-MVP.

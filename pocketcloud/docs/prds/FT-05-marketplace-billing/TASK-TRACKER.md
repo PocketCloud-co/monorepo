@@ -21,6 +21,7 @@
 | MB-011 | P1 | 1099/tax export | MB-005 | 1099-NEC/K data export matches ledger to the cent for fixture year | Proposed | |
 | MB-012 | P1 | Dispute flow from receipts | MB-006, SDK-009 | documented flow; both parties retrieve identical signed evidence bundle | Proposed | |
 | MB-013 | P0 ⚠ | Metering seam consumer + reconciliation + rebuild runbook | MB-001, CP-013 | idempotent queue consumer (ON CONFLICT DO NOTHING); hourly R2-log↔ledger reconciliation pages on divergence and freezes payouts; payout/invoice runs refuse on stale watermark; full ledger rebuild from R2 log rehearsed and documented | Proposed | |
+| MB-014 | P0 | Showback/chargeback for private pools (F21, MVP per DR-08) | MB-002 | per-pool, per-team/project usage reports rendered from the same receipts; payouts disabled per pool config with ledger invariant still balancing (platform side = license, not take); SaaS license billing line per pool | Proposed | |
 
 ## Change log
 
