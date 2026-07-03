@@ -10,8 +10,12 @@ undetectably tamper with it.
 
 | | |
 |---|---|
-| **Product Requirements Document** | [`docs/PRD.md`](docs/PRD.md) — vision, personas, functional requirements, security model, architecture, scaling plan, economics, legal posture, rollout phases, risks, decision records |
-| **Proof of Concept** | [`poc/`](poc/) — runnable Node.js (zero dependencies) implementation of the core protocol: additive secret sharing, SPDZ-style MACs, Beaver-triple MPC, coordinator + host agents over HTTP, malicious-host detection with quarantine and self-healing re-dispatch |
+| **Product Requirements Document** | [`docs/PRD.md`](docs/PRD.md) — vision, personas, functional requirements, security model, architecture, scaling plan, economics + metering, legal posture, rollout phases, risks, decision records, LLM-serving appendix |
+| **Engineering Standards** | [`docs/ENGINEERING-STANDARDS.md`](docs/ENGINEERING-STANDARDS.md) — the binding canon: Definition of Done, CI gate sequence, testing policy, security engineering, agent execution contract |
+| **Roadmap** | [`docs/ROADMAP.md`](docs/ROADMAP.md) — milestones M0–M5, deliverables, exit criteria |
+| **Feature PRDs & task trackers** | [`docs/prds/`](docs/prds/) — nine feature areas (FT-00…FT-08), each with a self-contained PRD and a task tracker (IDs, dependencies, acceptance criteria) built for delegation to subagents |
+| **Proof of Concept** | [`poc/`](poc/) — runnable Node.js (zero dependencies) implementation of the core protocol: additive secret sharing, SPDZ-style MACs, Beaver-triple MPC, coordinator + host agents over HTTP, malicious-host detection with quarantine and self-healing re-dispatch, deterministic metering with a balancing ledger |
+| **CI** | [`.github/workflows/pocketcloud-ci.yml`](../.github/workflows/pocketcloud-ci.yml) — full test suite + demo smoke + framework integrity on every PR |
 
 ## Quick start
 

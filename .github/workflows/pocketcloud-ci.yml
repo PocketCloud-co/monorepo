@@ -1,0 +1,57 @@
+# Pocket Cloud CI — FT-00 / PF-001
+#
+# Gate policy (ENGINEERING-STANDARDS.md §2): every PR touching pocketcloud/
+# must pass syntax check, the full test suite (unit + e2e + adversarial +
+# metering), and a demo smoke run. Changing this file requires a Decision
+# Record in docs/prds/FT-00-platform-foundations/PRD.md.
+
+name: pocketcloud-ci
+
+on:
+  push:
+    branches: [master]
+    paths: ['pocketcloud/**', '.github/workflows/pocketcloud-ci.yml']
+  pull_request:
+    paths: ['pocketcloud/**', '.github/workflows/pocketcloud-ci.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: syntax + tests + demo smoke
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pocketcloud/poc
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Syntax check (all sources)
+        run: |
+          find src test demo.js -name '*.js' -print0 | xargs -0 -n1 node --check
+
+      - name: Test suite (unit + e2e + adversarial + metering)
+        run: npm test
+
+      - name: Demo smoke run (full 4-act protocol demo)
+        run: node demo.js
+
+  docs:
+    name: PRD framework integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Every feature folder has PRD + TASK-TRACKER
+        run: |
+          set -e
+          for d in pocketcloud/docs/prds/FT-*/; do
+            test -f "$d/PRD.md" || { echo "missing PRD.md in $d"; exit 1; }
+            test -f "$d/TASK-TRACKER.md" || { echo "missing TASK-TRACKER.md in $d"; exit 1; }
+          done
+          echo "framework structure OK"

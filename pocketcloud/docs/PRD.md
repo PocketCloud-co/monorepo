@@ -351,6 +351,28 @@ Hosts are independent contractors; Stripe Connect handles 1099-K/1099-NEC. Inter
 - **DR-03 (2026-07-03):** Templates before arbitrary code. Security surface first, generality later.
 - **DR-04 (2026-07-03):** Additive sharing + SPDZ MACs at launch; Shamir t-of-n in Phase 2. Simplicity and auditability over flexibility.
 - **DR-05 (2026-07-03):** The collusion threshold qualifier is always stated. No absolute-security marketing.
+- **DR-06 (2026-07-03):** Nothing merges without the full test + regression gate sequence; the gates are CI-enforced and may not be weakened to unblock work. Canon: `ENGINEERING-STANDARDS.md`.
+- **DR-07 (2026-07-03):** All work is defined ahead of execution in the hierarchical feature-PRD framework (`docs/prds/`) with task IDs, dependencies, and acceptance criteria, so delegated agents — of any capability tier — execute from self-contained specs.
+
+---
+
+## 15. Delivery Framework (how this PRD becomes shipped software)
+
+This master PRD states product truth. Execution is governed by three
+companion layers, all in this repo and all binding:
+
+| Layer | Document | Role |
+|---|---|---|
+| Standards | [`ENGINEERING-STANDARDS.md`](ENGINEERING-STANDARDS.md) | The enforceable canon: Definition of Done, CI/CD gate sequence, testing policy (unit/property/adversarial/e2e/golden/chaos), security engineering rules, dependency policy, and the agent execution contract |
+| Roadmap | [`ROADMAP.md`](ROADMAP.md) | Milestones M0–M5 with deliverables mapped to feature areas and hard exit criteria |
+| Work breakdown | [`prds/`](prds/) | Nine feature areas (FT-00…FT-08), each a self-contained `PRD.md` (requirements, interface contracts, threat model, QA obligations, decision records, open questions) plus a `TASK-TRACKER.md` (every task with ID, priority, dependencies, acceptance criteria, status, artifacts, change log) |
+
+Enforcement is mechanical, not aspirational: `.github/workflows/
+pocketcloud-ci.yml` runs the full PoC suite and framework-integrity checks on
+every PR, and the gate set only grows (FT-00 owns it; changes require a
+Decision Record). Work not present in a tracker does not exist; guidance for
+downstream agents is embedded in every feature folder so it survives
+delegation to smaller models (see `prds/README.md`, "The rules").
 
 ---
 
