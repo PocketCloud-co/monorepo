@@ -1,0 +1,17 @@
+{
+  "name": "@pocketcloud/poc",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pocket Cloud proof of concept: privacy-preserving distributed compute on untrusted edge devices (additive secret sharing + SPDZ MACs + Beaver triples). Zero dependencies.",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "demo": "node demo.js",
+    "test": "node --test test/crypto.test.js test/e2e.test.js",
+    "coordinator": "node src/coordinator/main.js",
+    "worker": "node src/worker/main.js"
+  },
+  "license": "UNLICENSED"
+}
