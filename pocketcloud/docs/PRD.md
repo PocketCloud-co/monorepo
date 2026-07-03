@@ -378,6 +378,7 @@ Hosts are independent contractors; Stripe Connect handles 1099-K/1099-NEC. Inter
 - **DR-06 (2026-07-03):** Nothing merges without the full test + regression gate sequence; the gates are CI-enforced and may not be weakened to unblock work. Canon: `ENGINEERING-STANDARDS.md`.
 - **DR-07 (2026-07-03):** All work is defined ahead of execution in the hierarchical feature-PRD framework (`docs/prds/`) with task IDs, dependencies, and acceptance criteria, so delegated agents — of any capability tier — execute from self-contained specs.
 - **DR-08 (2026-07-03, founder decision):** Private pools (§5.0, F19–F21) are MVP scope. Rationale: enterprise fleets via MDM remove the marketplace's hardest launch problems (stranger payouts, stranger trust, consumer install friction) while datacenter capacity/power scarcity makes "your idle corporate fleet is a private compute pool" immediately sellable — through the MSP channel we already have. The public marketplace remains the destination; private pools are the wedge, and hybrid burst (F22) is the bridge.
+- **DR-09 (2026-07-03, founder decision):** Standing north star — the embedded home-edge play (`STRATEGY-NORTH-STAR.md`): Pocket Cloud's runtime embedded in home gateway/edge devices via OEM/ISP partnerships, sequenced smaller-players-first because hyperscalers can reproduce the solution but not our neutrality or first-mover fleet. Reviewed at every milestone close; the agent core's embeddability (small, cross-compilable, privilege-free) is a standing design requirement from day one.
 
 ---
 

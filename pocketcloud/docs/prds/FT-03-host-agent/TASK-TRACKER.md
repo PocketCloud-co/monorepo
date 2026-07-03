@@ -24,7 +24,8 @@
 | HA-013 | P2 | Homelab container tier (Podman) for GPU workloads | HA-001, HA-003 | GPU kernel runs in rootless container with caps; only on explicitly-opted homelab tier | Proposed | |
 | HA-014 | P1 | Tier-W web/WASM agent spike | CC-031 (WASM build), CP-001 | browser tab runs a T1 share kernel end-to-end vs ephemeral coordinator at ≥40% native throughput; probation trust class enforced by placement; onboarding funnel concept validated with 3 testers (DEVICE-RUNTIME.md A.2) | Proposed | |
 | HA-015 | P1 | Android-TV/Fire-TV agent variant | HA-010 | native agent runs on 2 reference TV devices wall-powered 24/7; standby/thermal soak report; store-policy review for TV surfaces | Proposed | |
-| HA-016 | P2 | NAS/router packages (Synology, QNAP, OpenWrt) | HA-002, HA-013 | installable package per platform; caps honored; uptime telemetry confirms always-on profile | Proposed | |
+| HA-016 | P1 | NAS/router packages (Synology, QNAP, OpenWrt) — north-star P-0 wave (DR-09) | HA-002, HA-013 | installable package per platform; caps honored; uptime telemetry confirms always-on profile; doubles as the embedded-target proving ground | Proposed | |
+| HA-018 | P1 | OEM SDK one-pager + embeddable surface sketch (DR-09, gated on MVP exit) | MVP exit, HA-016 | OEM-facing one-pager (offer shape, rev-share, consent/caps hooks); SDK surface doc showing the agent core cross-compiled to one reference router target; reviewed by founder before first P-1 conversation | Proposed | |
 
 ## Change log
 

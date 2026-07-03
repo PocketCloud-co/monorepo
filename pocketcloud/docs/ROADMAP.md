@@ -98,6 +98,13 @@ arbitrary-code sandbox tier (FT-03), Mode-3 MPC boundary expansion (FT-06).
 
 ---
 
+### North-star review (DR-09)
+
+Every milestone close includes a review against
+[`STRATEGY-NORTH-STAR.md`](STRATEGY-NORTH-STAR.md) — "are we closer to the
+embedded home-edge play?" — checking the standing embeddability requirement
+on the agent core and the partner-wave readiness (P-0 → P-3).
+
 ### Milestone discipline
 
 - A milestone closes only when every listed deliverable's tasks are `Done`
