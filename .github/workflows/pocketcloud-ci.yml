@@ -1,0 +1,134 @@
+# Pocket Cloud CI — FT-00 / PF-001
+#
+# Gate policy (ENGINEERING-STANDARDS.md §2): every PR touching pocketcloud/
+# must pass syntax check, the full test suite (unit + e2e + adversarial +
+# metering), and a demo smoke run. Changing this file requires a Decision
+# Record in docs/prds/FT-00-platform-foundations/PRD.md.
+
+name: pocketcloud-ci
+
+on:
+  push:
+    branches: [master]
+    paths: ['pocketcloud/**', '.github/workflows/pocketcloud-ci.yml']
+  pull_request:
+    paths: ['pocketcloud/**', '.github/workflows/pocketcloud-ci.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: syntax + tests + demo smoke
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pocketcloud/poc
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Syntax check (all sources)
+        run: |
+          find src test demo.js -name '*.js' -print0 | xargs -0 -n1 node --check
+
+      - name: Test suite (unit + e2e + adversarial + metering)
+        run: npm test
+
+      - name: Demo smoke run (full 4-act protocol demo)
+        run: node demo.js
+
+      - name: Ledger core tests (MB-001)
+        working-directory: pocketcloud/platform/ledger
+        run: node --test 'test/*.test.js'
+
+      - name: Placement + pool-isolation tests (CP-014/CP-015)
+        working-directory: pocketcloud/platform/placement
+        run: node --test 'test/*.test.js'
+
+  crypto:
+    name: crypto core (Rust) - parity + property + adversarial
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pocketcloud/crypto
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Regenerate golden vectors from the PoC (must be in sync)
+        run: |
+          node ../poc/tools/gen-golden.js > /tmp/vectors.json
+          diff -q /tmp/vectors.json ../qa/golden/crypto/vectors.json \
+            || { echo "golden vectors drifted from the PoC — regenerate"; exit 1; }
+      - name: Format check
+        run: cargo fmt --check
+      - name: Clippy (warnings are errors)
+        run: cargo clippy --all-targets --features test-rng -- -D warnings
+      - name: Parity vs Node PoC (CC-030)
+        run: cargo test --test parity
+      - name: Property + adversarial suites (CC-020)
+        run: cargo test --features test-rng
+
+  supabase-schema:
+    name: Supabase schema - RLS + ledger invariants vs real Postgres
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PostgreSQL
+        run: sudo apt-get update && sudo apt-get install -y postgresql
+      - name: Apply schemas + run assertions on an ephemeral Postgres
+        working-directory: pocketcloud/platform/supabase
+        # CI runner is non-root, so the script runs Postgres directly.
+        run: bash tests/run-tests.sh
+
+  sdk-python:
+    name: Python SDK - contract tests vs live coordinator
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pocketcloud/sdk/python
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install (dev)
+        run: pip install -e '.[dev]'
+      - name: Contract + adversarial tests (boots the PoC coordinator)
+        run: python -m pytest -q
+
+  docs:
+    name: PRD framework integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Every feature folder has PRD + TASK-TRACKER
+        run: |
+          set -e
+          for d in pocketcloud/docs/prds/FT-*/; do
+            test -f "$d/PRD.md" || { echo "missing PRD.md in $d"; exit 1; }
+            test -f "$d/TASK-TRACKER.md" || { echo "missing TASK-TRACKER.md in $d"; exit 1; }
+          done
+          echo "framework structure OK"
+
+      - name: Tracking hierarchy complete (project, milestones, specs)
+        run: |
+          set -e
+          test -f pocketcloud/docs/PROJECT-TRACKER.md || { echo "missing PROJECT-TRACKER.md"; exit 1; }
+          for m in M0 M1 M2 M3 M4 M5; do
+            test -f "pocketcloud/docs/milestones/$m-TRACKER.md" || { echo "missing milestones/$m-TRACKER.md"; exit 1; }
+          done
+          test -f pocketcloud/docs/specs/README.md || { echo "missing specs/README.md"; exit 1; }
+          for n in 001 002 003 004 005 006 007; do
+            ls pocketcloud/docs/specs/SPEC-$n-*.md >/dev/null 2>&1 || { echo "missing SPEC-$n"; exit 1; }
+          done
+          echo "hierarchy OK"
