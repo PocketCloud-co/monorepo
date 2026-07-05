@@ -41,6 +41,31 @@ jobs:
       - name: Demo smoke run (full 4-act protocol demo)
         run: node demo.js
 
+  crypto:
+    name: crypto core (Rust) - parity + property + adversarial
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pocketcloud/crypto
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Regenerate golden vectors from the PoC (must be in sync)
+        run: |
+          node ../poc/tools/gen-golden.js > /tmp/vectors.json
+          diff -q /tmp/vectors.json ../qa/golden/crypto/vectors.json \
+            || { echo "golden vectors drifted from the PoC — regenerate"; exit 1; }
+      - name: Format check
+        run: cargo fmt --check
+      - name: Clippy (warnings are errors)
+        run: cargo clippy --all-targets --features test-rng -- -D warnings
+      - name: Parity vs Node PoC (CC-030)
+        run: cargo test --test parity
+      - name: Property + adversarial suites (CC-020)
+        run: cargo test --features test-rng
+
   docs:
     name: PRD framework integrity
     runs-on: ubuntu-latest

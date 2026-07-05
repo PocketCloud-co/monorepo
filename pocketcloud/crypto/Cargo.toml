@@ -1,0 +1,24 @@
+[package]
+name = "pocketcloud-crypto"
+version = "0.1.0"
+edition = "2021"
+description = "Pocket Cloud crypto core: prime-field secret sharing, SPDZ MACs, Beaver triples (SPEC-001). Single audited implementation (DR-CC-02)."
+license = "UNLICENSED"
+
+# DR-CC-01/CC-02 + Standards §5: the crypto core has ZERO third-party
+# dependencies. Randomness comes from the OS via a tiny std-only wrapper
+# (getrandom-free: reads /dev/urandom on unix). Tests are std-only too.
+[dependencies]
+
+[features]
+# Enables the seedable test RNG (deterministic golden generation). Compiled
+# OUT of release builds — production never has a seedable CSPRNG (Standards
+# §4 / KEY-MANAGEMENT: bad randomness = broken secrecy).
+test-rng = []
+
+[lib]
+name = "pocketcloud_crypto"
+path = "src/lib.rs"
+
+[profile.release]
+overflow-checks = true  # field math must never silently wrap in release
