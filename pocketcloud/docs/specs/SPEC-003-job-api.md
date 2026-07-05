@@ -46,6 +46,9 @@ private-dot = 12·len. New templates MUST publish their unit function here.
 - `GET /workers` → `{ workers: [ { id, url, quarantined, quarantineReason? } ] }`.
 
 ## 4. v1 additions (`TBD`, sized but not final)
+**BINDING (audit finding 2): versioned API base path (`/v1/jobs`, …) from
+the first production deployment** — path-versioning is free on day one and
+a client-migration project later.
 Org-scoped API keys + pool targeting (CP-014/SDK-010: `pool` field;
 private-pool credentials cannot place public work); async job status +
 webhooks (F6); strict-mode sealed share bundles replacing plaintext inputs

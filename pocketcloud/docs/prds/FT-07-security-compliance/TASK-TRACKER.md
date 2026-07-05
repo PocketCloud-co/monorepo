@@ -15,7 +15,7 @@
 | SEC-003 | P0 ⚠ | Key management architecture doc + review | — | covers device, update-signing (HSM/ceremony), per-attempt MAC, service identities; owners implement via their tasks (HA-005, PF-008) | Done (2026-07-05) | `docs/KEY-MANAGEMENT.md` (11 key classes, trust chains, prohibitions, ceremonies, OQ-SEC-04/05) |
 | SEC-004 | P0 | Audit #1 scoping + vendor engagement | CC-050 ready, OQ-SEC-01 | SOW signed; scope = crypto core + agent; schedule fits M3 | Proposed | |
 | SEC-005 | P0 ⚠ | KYC/sanctions integration policy | MB-004 design | host + customer flows specified incl. thresholds (OQ-SEC-03); sanctions screening both sides; fixtures for FT-05 tests | Proposed | |
-| SEC-006 | P0 | Legal artifact pack v1 (counsel) | — | host ToS + "what runs on my machine" (SEC-R4), customer ToS, privacy policy, model-license review process (OQ-LS-01) | Proposed | |
+| SEC-006 | P0 | Legal artifact pack v1 (counsel) | — | host ToS + "what runs on my machine" (SEC-R4), customer ToS, privacy policy, model-license review process (OQ-LS-01); **private-pool contracts cite the pool-isolation property-test suite + reconciliation reports as interim evidence until the transparency log (CP-012) ships** (one-way-door audit finding 9) | Proposed | |
 | SEC-007 | P0 | Abuse program: shape-anomaly detection spec + lawful-process policy | SEC-005 | detector spec with labeled corpus plan; published lawful-process page draft; counsel sign-off | Proposed | |
 | SEC-008 | P0 | Export-control review (EAR §740.17) | — | written determination; gates international onboarding (OQ-SEC-02) | Proposed | |
 | SEC-009 | P1 | SOC 2 program stand-up | M2 infra live | control mapping, evidence automation plan, auditor selected; Type II window scheduled for M4 | Proposed | |

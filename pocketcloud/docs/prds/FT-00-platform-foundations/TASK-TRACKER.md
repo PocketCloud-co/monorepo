@@ -15,7 +15,7 @@
 | PF-005 | P0 | Golden-transcript harness | PF-003 | record/replay + byte-diff CLI; seeded-RNG hooks (test builds only); one PoC transcript recorded as first golden | Ready | |
 | PF-006 | P0 | Dependency audit + secret scan CI stages | PF-001 | high/critical audit finding or detected secret blocks merge; fixture-tested | Ready | |
 | PF-007 | P0 | Coverage gates with ratchet | PF-003 | crypto ≥95% / others ≥80% enforced; lowering requires DR reference in PR body, checked by CI | Ready | |
-| PF-008 | P0 ⚠ | Reproducible signed agent builds | PF-003 | two independent CI runs produce identical binaries; signature chain verified in CI; keys never on runners | Proposed | |
+| PF-008 | P0 ⚠ | Reproducible signed agent builds | PF-003, SEC-003 | two independent CI runs produce identical binaries; signature chain verified in CI; keys never on runners; **BOTH K4 roots (primary + independently-ceremonied emergency root) pinned from the first public binary** (one-way-door audit finding 3) | Proposed | |
 | PF-009 | P1 | Release process + channels (stable/beta) | PF-008 | tagged, signed, changelog-generated releases; rollback procedure documented and rehearsed | Proposed | |
 | PF-010 | P0 | Pipeline meta-suite (known-bad PR fixtures) | PF-001, PF-006, PF-007 | each fixture (failing test, lowered coverage, secret, unaudited dep, deleted adversarial test) rejected by CI | Ready | |
 | PF-011 | P1 | Load/soak/chaos harness scaffold | PF-003 | nightly job spins ephemeral fabric, injects churn/partition/slow-host, reports against SLOs | Proposed | |

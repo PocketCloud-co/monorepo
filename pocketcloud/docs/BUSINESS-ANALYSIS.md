@@ -166,6 +166,10 @@ for early-stage capital: *we grow capacity without buying it.*
 ## 9. Decisions queued for founder
 
 - **OQ-BIZ-01** (R1): ratify license-anchored model + KPI hierarchy.
+  **Deadline discipline (one-way-door audit finding 10):** MVP-PLAN and
+  this document already *behave* as if ratified; the framing becomes
+  irreversible at the first investor conversation that uses it — ratify or
+  reject explicitly BEFORE any external fundraising material exists.
 - **OQ-BIZ-02**: MSP channel economics — margin share % and named-account
   protection (default: 20–30% margin to the operating MSP; PDC is the
   design-partner MSP).

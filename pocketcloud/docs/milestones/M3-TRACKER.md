@@ -19,7 +19,9 @@
 
 **Exit checklist:** [ ] 2,000 devices · [ ] completion SLA ≥99% Standard
 tier · [ ] audit #1 clean or remediated · [ ] strict mode default for
-privacy templates · [ ] §9 review passed.
+privacy templates — **the DR-SDK-02 default flip is itself a ⚠ HIGH-RISK
+review item (one-way ratchet: flipping back later = privacy-regression
+headline)** · [ ] §9 review passed.
 
 ## Change log
 - 2026-07-04: created.

@@ -48,5 +48,25 @@ is MB-001's job; v0's check is necessary, not sufficient.
 license mode, MB-014), hash-chain fields for the R2 append-only log
 (prevHash, chainSeq) per SEAMS §4, rev-share party lines (DR-09 OEM splits).
 
+## 6. Durable-format hedges (BINDING on v1 — decided now, before CP-013
+builds the chain; per one-way-door audit 2026-07-05, finding 1)
+
+The receipt log is an append-only financial source of truth: its format is
+a one-way door the moment the first production receipt is appended.
+Therefore v1 MUST include, from the first appended entry:
+
+1. **`schemaVersion`** on every receipt — the chain will outlive the schema.
+2. **Canonical serialization for chain hashing**: the chain-hash input is
+   the receipt in JCS canonical JSON (RFC 8785). Never hash ad-hoc
+   serializations — two implementations must produce identical chain hashes.
+3. **Independent re-priceability**: every receipt carries
+   `priceConfigVersion` (referencing MB-003's versioned pricing config) AND
+   an explicit platform-take line — nothing about a historical receipt's
+   money may be "implicit" once denominations become configurable.
+4. **Cross-partition anchoring**: chains are partitioned by day/cell; each
+   partition's head hash is (a) written to Postgres and (b) embedded in the
+   next partition's genesis entry, so the full history is one verifiable
+   chain, not islands.
+
 ## Change log
 - 2026-07-04: v0 extracted from PoC.

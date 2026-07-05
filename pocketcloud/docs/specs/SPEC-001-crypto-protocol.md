@@ -49,6 +49,13 @@
 - Field elements travel as **decimal strings** in JSON (BigInt-safe).
 - Vectors = arrays of decimal strings; matrices = arrays of vectors.
 - v1: length-prefixed little-endian binary, `TBD(CC-001)`.
+- **Version negotiation (BINDING on v1; one-way-door audit finding 2):**
+  every share bundle and kernel request carries `protoVersion` and
+  `fieldId` (identifying the modulus). Agents advertise their supported
+  (protoVersion, fieldId) set at enrollment; the coordinator places jobs
+  only on compatible workers. This is what makes the 2⁶¹→128-bit field
+  migration a rolling upgrade instead of a fleet flag-day — mandatory
+  BEFORE any external party speaks the protocol (CC-001).
 
 ## 7. Conformance
 - Golden transcripts (seeded RNG, test builds only) must match the

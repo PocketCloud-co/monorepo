@@ -9,9 +9,13 @@ Rules (binding, per Standards §6 and PROJECT-TRACKER):
    AND same-PR updates to every consumer feature PRD listed in the spec's
    header. Additive optional fields are minor and documented in the spec's
    change log.
-3. **v0 = the PoC.** Where a spec says "v0", the Node PoC in
-   `pocketcloud/poc/` is the executable reference (DR-PF-01) and the spec is
-   normative prose over it. Production (v1) specs supersede at CC-030/CP-001.
+3. **v0 = the PoC — and v0 is INTERNAL-ONLY.** Where a spec says "v0", the
+   Node PoC in `pocketcloud/poc/` is the executable reference (DR-PF-01) and
+   the spec is normative prose over it. Production (v1) specs supersede at
+   CC-030/CP-001. **No external customer, design partner, or released SDK
+   may ever target a v0 spec** (one-way-door audit finding 7) — v0 wire
+   formats are throwaway by design and must never accrete external
+   dependents.
 4. **Unknowns are explicit.** `TBD(owner-task)` marks open holes; a spec
    with a TBD can be implemented around it but not through it.
 

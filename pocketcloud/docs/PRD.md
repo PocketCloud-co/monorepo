@@ -297,7 +297,7 @@ Phase 1 ships with a centralized coordinator — pragmatic, but it concentrates 
 | ID | Question | Proposed default |
 |----|----------|------------------|
 | OQ-1 | Payout floor / minimum viable host earnings — is $15–40/mo/device enough to retain P1 hosts? | Validate in beta with real payout data before GA marketing |
-| OQ-2 | Take rate 35–45% — defensible vs. Salad (~50%+) and vast.ai (~25%)? | Start 40%, publish it, adjust with margin data |
+| OQ-2 | Take rate 35–45% — defensible vs. Salad (~50%+) and vast.ai (~25%)? | Start 40% internally. **Publishing hedge (one-way-door audit finding 5): published take rates ratchet — they can fall, never rise. Publicly lead with the host payout floor and net-of-power earnings (the trust story); state take only as a bounded range with a dated review clause; never print a bare number** |
 | OQ-3 | Do we subsidize demand or supply first? | Supply via P3 fleets (MSPs) — cheapest reliable capacity, then chase demand |
 | OQ-4 | Electricity cost disclosure — do we show hosts net-of-power earnings? | Yes; trust > short-term signups |
 
@@ -374,7 +374,7 @@ Hosts are independent contractors; Stripe Connect handles 1099-K/1099-NEC. Inter
 - **DR-02 (2026-07-03):** No token / no blockchain. Fiat payouts via Stripe Connect.
 - **DR-03 (2026-07-03):** Templates before arbitrary code. Security surface first, generality later.
 - **DR-04 (2026-07-03):** Additive sharing + SPDZ MACs at launch; Shamir t-of-n in Phase 2. Simplicity and auditability over flexibility.
-- **DR-05 (2026-07-03):** The collusion threshold qualifier is always stated. No absolute-security marketing.
+- **DR-05 (2026-07-03; scope extended 2026-07-05):** The collusion threshold qualifier is always stated. No absolute-security marketing. Extension: all published security figures (forgery bounds, field sizes) must cite the protocol version they hold for — public numbers track the *deployed* field, not the aspirational one.
 - **DR-06 (2026-07-03):** Nothing merges without the full test + regression gate sequence; the gates are CI-enforced and may not be weakened to unblock work. Canon: `ENGINEERING-STANDARDS.md`.
 - **DR-07 (2026-07-03):** All work is defined ahead of execution in the hierarchical feature-PRD framework (`docs/prds/`) with task IDs, dependencies, and acceptance criteria, so delegated agents — of any capability tier — execute from self-contained specs.
 - **DR-08 (2026-07-03, founder decision):** Private pools (§5.0, F19–F21) are MVP scope. Rationale: enterprise fleets via MDM remove the marketplace's hardest launch problems (stranger payouts, stranger trust, consumer install friction) while datacenter capacity/power scarcity makes "your idle corporate fleet is a private compute pool" immediately sellable — through the MSP channel we already have. The public marketplace remains the destination; private pools are the wedge, and hybrid burst (F22) is the bridge.

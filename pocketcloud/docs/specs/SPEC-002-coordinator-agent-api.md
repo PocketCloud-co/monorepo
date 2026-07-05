@@ -48,7 +48,10 @@ Response: `{ zShare, zMacShare }` (scalars: summed over elements).
 
 ## 5. v1 additions (`TBD`, do not build against yet)
 Per-device mTLS certs (CP-002); signed work manifests; pool_id scoping
-(CP-014); fuel/receipt counters (HA-003); artifact references (SPEC-006).
+(CP-014); fuel/receipt counters (HA-003); artifact references (SPEC-006);
+**BINDING (audit finding 2): `protoVersion`+`fieldId` on every kernel
+request, and version-set advertisement in the registration/enrollment
+payload** (SPEC-001 §6 negotiation).
 
 ## Change log
 - 2026-07-04: v0 extracted from PoC.

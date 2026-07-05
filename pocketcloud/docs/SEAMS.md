@@ -51,6 +51,12 @@ add a Seam Registry row.
 - **S7 — Explicit backpressure policy.** When buffers grow past thresholds:
   what slows down (new job intake), what never stops (result collection,
   receipt writing), and at what depth humans are paged.
+- **S8 — No durable state whose only home is a non-exportable vendor
+  primitive.** Durable Objects storage is a cache/WAL, never the sole copy:
+  anything that must survive vendor exit lands in R2 (S3-compatible,
+  exportable) or Postgres. This invariant is DR-PF-03's real exit strategy
+  made explicit (one-way-door audit finding 4); the "rebuild a cell from R2
+  + Postgres alone" drill in OO-007 proves it stays true.
 
 ## 3. Seam Registry
 
@@ -62,7 +68,7 @@ add a Seam Registry row.
 | 4 | Agent results → Verifier | HTTPS push to router | agent local WAL until acked | jobId+shareIndex+attempt+workerId | agent retries across restarts (HA-009); duplicate results deduped | HA-009, CP-006 |
 | 5 | Ledger → Stripe payouts (Supabase → Stripe) | Stripe API | payout-run rows in Postgres before API calls | payout item id (Stripe idempotency key) | payouts delayed, never doubled; retry queue; vendor-status runbook | MB-005 |
 | 6 | Canary verdicts → Fraud/Reputation | CF Queue | verdict log in R2 | canaryJobId | scoring lags; placement uses last-known reputation | OO-004, MB-008 |
-| 7 | Relay frames → Session metering | DO-local counters | DO storage checkpoint every N frames | sessionId+frameSeq range | metering checkpoint lags ≤ N frames; session continues | LS-004, LS-010 |
+| 7 | Relay frames → Session metering | DO-local counters | DO storage checkpoint every N frames, **flushed to R2 every M frames and at session close (S8 — DO is never the sole home of billing data)** | sessionId+frameSeq range | metering checkpoint lags ≤ N frames; session continues | LS-004, LS-010 |
 | 8 | Services/agents → Telemetry backend | OTLP batched | bounded local buffer, drop-oldest **metrics** only; **audit/security events use seam pattern in full** (never dropped) | event id | dashboards stale; out-of-band health probes still up (OO-R4) | OO-001, OO-010 |
 | 9 | Artifact publisher → Agent caches | R2 pull | R2 is the durable store; manifests signed | content hash | agents serve cached artifacts; new pins wait | HA-008, LS-002 |
 | 10 | Registry writes (enrollment) → Postgres projection | CF Queue | enrollment event log in R2 | deviceId+eventSeq | new enrollments queue; existing fleet unaffected (placement reads DO-cached registry view) | CP-002, CP-013 |
