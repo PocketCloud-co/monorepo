@@ -18,6 +18,7 @@ undetectably tamper with it.
 | **Milestone Trackers** | [`docs/milestones/`](docs/milestones/) — M0–M5, each mapping deliverables → owning task IDs → exit checklists |
 | **Integration Specs** | [`docs/specs/`](docs/specs/) — SPEC-001…007, the versioned contracts independent implementations (and subagents) build to |
 | **Seam Standard** | [`docs/SEAMS.md`](docs/SEAMS.md) — durability/metrics/observability rules for every cross-component boundary; seam registry; the Cloudflare→Supabase metering reference design |
+| **Key Management** | [`docs/KEY-MANAGEMENT.md`](docs/KEY-MANAGEMENT.md) — 11 key classes with storage/rotation/compromise stories, trust chains, CI-testable prohibitions, ceremonies (SEC-003) |
 | **Device Runtime** | [`docs/DEVICE-RUNTIME.md`](docs/DEVICE-RUNTIME.md) — the runc answer, honest device-class supply matrix, tiered fleet architecture (M/D/H/W), artifact delivery, resource-cap spec |
 | **North Star Strategy** | [`docs/STRATEGY-NORTH-STAR.md`](docs/STRATEGY-NORTH-STAR.md) — the embedded home-edge play (DR-09): OEM/ISP partner sequencing, competitive clock vs hyperscalers, security-bundle option |
 | **Business Analysis** | [`docs/BUSINESS-ANALYSIS.md`](docs/BUSINESS-ANALYSIS.md) — first-principles + MBA pass: where value concentrates, license-vs-marketplace unit economics, five forces, moat ranking, refinements R1–R7, kill gates, queued founder decisions |

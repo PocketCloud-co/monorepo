@@ -10,7 +10,7 @@
 |----|---|-------|-----------|---------------------|--------|-----------|
 | SEC-001 | P0 | Ratify all feature threat models (FT-00..FT-08) | feature PRDs exist | each threat table reviewed; gaps become feature tasks; sign-off recorded here | Ready | |
 | SEC-002 | P0 | Threat-model sign-off CI check | SEC-001, PF-001 | fixture PR lacking sign-off label on first-P0 merge is blocked (meta-suite PF-010 case) | Proposed | |
-| SEC-003 | P0 ⚠ | Key management architecture doc + review | — | covers device, update-signing (HSM/ceremony), per-job MAC, service identities; owners implement via their tasks (HA-005, PF-008) | Ready | |
+| SEC-003 | P0 ⚠ | Key management architecture doc + review | — | covers device, update-signing (HSM/ceremony), per-attempt MAC, service identities; owners implement via their tasks (HA-005, PF-008) | Done (2026-07-05) | `docs/KEY-MANAGEMENT.md` (11 key classes, trust chains, prohibitions, ceremonies, OQ-SEC-04/05) |
 | SEC-004 | P0 | Audit #1 scoping + vendor engagement | CC-050 ready, OQ-SEC-01 | SOW signed; scope = crypto core + agent; schedule fits M3 | Proposed | |
 | SEC-005 | P0 ⚠ | KYC/sanctions integration policy | MB-004 design | host + customer flows specified incl. thresholds (OQ-SEC-03); sanctions screening both sides; fixtures for FT-05 tests | Proposed | |
 | SEC-006 | P0 | Legal artifact pack v1 (counsel) | — | host ToS + "what runs on my machine" (SEC-R4), customer ToS, privacy policy, model-license review process (OQ-LS-01) | Proposed | |
