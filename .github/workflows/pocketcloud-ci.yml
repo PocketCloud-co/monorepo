@@ -74,6 +74,18 @@ jobs:
       - name: Property + adversarial suites (CC-020)
         run: cargo test --features test-rng
 
+  supabase-schema:
+    name: Supabase schema - RLS + ledger invariants vs real Postgres
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PostgreSQL
+        run: sudo apt-get update && sudo apt-get install -y postgresql
+      - name: Apply schemas + run assertions on an ephemeral Postgres
+        working-directory: pocketcloud/platform/supabase
+        # CI runner is non-root, so the script runs Postgres directly.
+        run: bash tests/run-tests.sh
+
   sdk-python:
     name: Python SDK - contract tests vs live coordinator
     runs-on: ubuntu-latest
