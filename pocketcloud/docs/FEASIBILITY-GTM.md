@@ -1,12 +1,16 @@
 # Pocket Cloud — Feasibility & Go-To-Market Analysis
 
-> **Evidence status (read first):** the deep-research pipeline completed its
-> search/extraction phases (sources below are real and cited) but the
-> 3-vote adversarial verification stage failed on an account spend limit —
-> so claims marked **[E]** are extracted-from-source but panel-unverified,
-> and claims marked **[K]** are from training knowledge (~Jan 2026 cutoff),
-> unverified. Re-run the verification pass (workflow resume
-> `wf_7854635d-c4c`) when budget allows. Nothing here contradicts
+> **Evidence status (updated 2026-07-05):** labels — **[V]** survived 3-vote
+> adversarial verification against primary sources (vote recorded); **[E]**
+> extracted-from-source but panel-unverified (verifiers hit the account
+> spend limit — 18 claims still pending); **[K]** training knowledge
+> (~Jan 2026), unverified. The partial verification run (5 verified, 1
+> refuted, 18 pending) covered exactly the load-bearing feasibility claims;
+> all market/competitor/pricing claims remain [K] pending budget
+> (OQ-BIZ-03). **One claim REFUTED for transparency:** the broad assertion
+> that 50B+ LLMs run "efficiently" on geo-distributed consumer devices was
+> voted down 1-2 — only the demonstrated-but-slow version stands, which is
+> the version this report already used. Nothing here contradicts
 > `BUSINESS-ANALYSIS.md`; where evidence bears on our design, the verdicts
 > agree — cited below.
 
@@ -17,13 +21,14 @@ onto Pocket Cloud's design choices:
 
 | Evidence | What it says | What it means for us |
 |---|---|---|
-| Petals (arXiv 2209.01188, 2312.08361) **[E]** | 176B model served on geo-distributed consumer GPUs at ~1 token-step/s (0.83 in a real 14-server EU/NA deployment) vs 4.18 tok/s batch-1 on 8×A100; throughput halves as RTT goes 5 ms→100 ms | **Interactive serving over residential WAN is RTT-bound physics, not an engineering gap.** Validates NG1 and Appendix B: batch is the wedge; interactive lives on the homelab/GPU tier or nowhere |
-| Petals limitations sections **[E]** | Authors concede **no input privacy** (first-layer peers can read tokens) and **no result integrity** (only an economic "bounty hunter" idea, which "still leaves a chance of receiving wrong outputs") | **Our two differentiators are exactly the flagship system's two acknowledged unsolved gaps.** MPC-private batch + MAC-verified results is a filled hole, not a me-too |
+| Petals (arXiv 2209.01188, 2312.08361) **[V 3-0]** | 176B model served on geo-distributed consumer GPUs at ~1 token-step/s (0.83 in a real 14-server EU/NA deployment) vs 4.18 tok/s batch-1 on 8×A100; the "10× faster" headline is vs single-machine RAM/SSD offloading, NOT vs datacenter serving; throughput identical at 1 Gbit/s vs 100 Mbit/s but falls 54% as RTT goes 5 ms→100 ms | **Interactive serving over residential WAN is RTT-bound physics, not an engineering gap** — verified verbatim against the primary source. Validates NG1 and Appendix B: batch is the wedge; interactive lives on the homelab/GPU tier or nowhere. Verifier bonus: 2024–26 literature (SpecExec, WANSpec) treats WAN RTT as the central bottleneck — confirming |
+| Petals orchestration result **[V 3-0]** | fault-tolerant inference + automatic load-balancing over uneven, churning, join/leave-at-will devices is demonstrated (open-source, two-continent deployment) | **The "can a churning consumer fleet even be coordinated" question is de-risked** — with the verifier's caveat that this is a capability proof, not commercial traction |
+| Petals limitations sections **[V 3-0]** | Authors concede **no input privacy** (first-layer peers can read tokens; MPC named only as unrealized future work) and **no result integrity** (only an economic "bounty hunter" idea that "still leaves a chance of receiving wrong outputs") | **Our two differentiators are exactly the flagship system's two acknowledged unsolved gaps** — verified verbatim from the paper's own limitations section. MPC-private batch + MAC-verified results is a filled hole, not a me-too |
 | Split-inference inversion attack (arXiv 2602.16760) **[E]** | ~59% of tokens recoverable from intermediate activations at a 2-layer split, ~35% at 8 layers; WAN split inference of 7B reaches 8.7–9.3 tok/s at ~80 ms RTT | Two-sided: (a) marginally-interactive distributed 7B-class serving is real; (b) **"sandwich mode" is transport-privacy, not cryptographic privacy — activation inversion is a demonstrated attack.** PRD Appendix B honesty note strengthened accordingly |
 | PUMA (arXiv 2307.12533), Marill (arXiv 2408.03561) **[E]** | MPC inference of LLaMA-7B ≈ 5 min/token (2023 SOTA); best 2024 mitigations gain 3.6–11.3× and require fine-tuning-time model changes; 7B was the largest model ever run under MPC | **Full-LLM MPC inference is off the table for years — exactly why we scoped MPC to T1–T3 kernels** (linear algebra, embeddings, aggregation, small-model scoring), not chat. Anyone pitching "MPC-private ChatGPT on phones" is selling vapor; we are not |
 | INTELLECT-1 (arXiv 2412.01152) **[E]** | 10B model trained across 3 continents at 83–96% utilization — but on **datacenter H100s over 500 Mb/s–4 Gb/s WAN**, with DiLoCo cutting communication ~400× | Distributed *training* is a datacenter-GPU-over-WAN story (Prime Intellect's segment), not a consumer-fleet story. Training is correctly out of our scope |
 | Parallax (arXiv 2509.26182) **[E]** | Decentralized serving gains 1.6–3.6× from scheduling, on 4090/5090-class nodes at ~10 ms inter-node latency; placement+routing under heterogeneity is NP-hard | Scheduler quality is a real, durable differentiator (supports BUSINESS-ANALYSIS moat #1); and even optimized systems assume better-than-residential links |
-| MPC benchmark survey (eprint 2026/183) **[E]** | First systematic cross-framework MPC benchmark appears only in early 2026; WAN-condition MPC performance was previously uncharacterized | The MPC-over-real-networks space is immature — early movers get to define credible benchmarks (and should publish ours) |
+| MPC benchmark survey (eprint 2026/183) **[V 2-1]** | First systematic cross-framework MPC benchmark appears only in early 2026; WAN-condition MPC performance was previously uncharacterized | The MPC-over-real-networks space is immature — early movers get to define credible benchmarks (and should publish ours). (2-1 vote: one verifier considered the "no prior benchmark" framing slightly strong; treat as medium confidence) |
 
 **Net:** the literature independently confirms our three load-bearing
 verdicts — batch-first (RTT physics), MPC scoped to kernels not chat
@@ -112,12 +117,18 @@ build the company on.
 
 ## 6. Follow-ups
 
-- Re-run the adversarial verification pass (resume `wf_7854635d-c4c`) when
-  the spend limit resets; promote **[E]**→verified or amend.
+- 2026-07-05: partial verification completed — 5 claims **[V]** (4
+  unanimous), 1 refuted (the "efficiently" overclaim; our framing already
+  matched the surviving version), 18 still **[E]** (verifiers hit the spend
+  limit again: PUMA/Marill MPC-overhead figures, INTELLECT-1, Parallax,
+  split-inference numbers). Resume `wf_7854635d-c4c` once more when budget
+  resets to finish the remaining 18.
 - Refresh competitor traction/pricing **[K]** with live sources before any
-  investor-facing use (tracked: OQ-BIZ-03).
-- PRD Appendix B updated this commit: sandwich mode described as transport
-  privacy with citation of the activation-inversion numbers.
+  investor-facing use (tracked: OQ-BIZ-03) — the market half of this report
+  was never verified in either run.
+- PRD Appendix B updated 2026-07-04: sandwich mode described as transport
+  privacy with citation of the activation-inversion numbers (note: that
+  specific inversion-attack claim is among the 18 still [E]).
 
 ## Change log
 - 2026-07-03: created from deep-research extraction (25 sources) + internal
