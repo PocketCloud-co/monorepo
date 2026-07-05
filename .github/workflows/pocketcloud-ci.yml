@@ -41,6 +41,10 @@ jobs:
       - name: Demo smoke run (full 4-act protocol demo)
         run: node demo.js
 
+      - name: Ledger core tests (MB-001)
+        working-directory: pocketcloud/platform/ledger
+        run: node --test 'test/*.test.js'
+
   crypto:
     name: crypto core (Rust) - parity + property + adversarial
     runs-on: ubuntu-latest

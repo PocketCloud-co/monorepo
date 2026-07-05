@@ -8,7 +8,7 @@
 
 | ID | P | Title | Depends on | Acceptance criteria | Status | Artifacts |
 |----|---|-------|-----------|---------------------|--------|-----------|
-| MB-001 | P0 ⚠ | Ledger service: append-only double-entry (Supabase Postgres per DR-PF-03) | PF-003 | property tests: invariant under generated interleavings; imbalance halts payouts + alerts; hash-chained entries; **ledger is a projection of the R2 receipt log (SEAMS.md §4), never the only copy** | Ready | |
+| MB-001 | P0 ⚠ | Ledger service: append-only double-entry (Supabase Postgres per DR-PF-03) | PF-003 | property tests: invariant under generated interleavings; imbalance halts payouts + alerts; hash-chained entries; **ledger is a projection of the R2 receipt log (SEAMS.md §4), never the only copy** | In Review | `platform/ledger/` — core logic + 9 tests (independent double-entry that provably fails on a corrupt leg; canonical hash chain; license-mode + gap-11 guard). Postgres/R2 persistence + halt-on-imbalance alerting pending deployment |
 | MB-002 | P0 ⚠ | Receipt ingestion + dual-signature verification | MB-001, CP-007 | invalid/duplicate/unverified receipts quarantined (never paid, never dropped); schema versioned jointly with FT-02 | Proposed | |
 | MB-003 | P0 ⚠ | Pricing config service | MB-001 | per-template prices + payout rate + tier multipliers as founder-approved config; quote reconciliation test with CP-008 | Proposed | |
 | MB-004 | P0 ⚠ | Stripe Connect onboarding (hosts) | MB-001 | test-mode e2e: enroll → KYC state machine → account linked; per-account device caps enforced | Proposed | |
@@ -30,3 +30,10 @@
   no-bill-on-reject, invariant) are the golden floor for MB-001/002/006.
 - 2026-07-03: DR-PF-03 ratified — MB-001 unblocked (Supabase Postgres);
   added MB-013 (seam consumer, reconciliation, rebuild runbook per SEAMS.md).
+- 2026-07-05: MB-001 core logic implemented (`platform/ledger/`, dep-free
+  Node, 9 tests green in CI). Directly fixes review finding 2 (invariant was
+  tautological — now derives every leg independently and provably fails on a
+  corrupt leg) and one-way-door audit finding 1 (versioned, canonically
+  hash-chained receipts; tamper-detectable). License mode (MB-014) + SEC-001
+  gap-11 guard implemented. Held at In Review pending Postgres/R2 persistence
+  and halt-on-imbalance alerting (need deployment).
