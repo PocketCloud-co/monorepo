@@ -13,8 +13,10 @@
 FT-05 owns the money: the metering ledger, receipts, pricing, customer
 billing, host payouts (Stripe Connect), reputation storage, the fraud
 engine, and both consoles. The metering *principles* are fixed by master PRD
-§9.4 and proven in the PoC (deterministic units, pay-only-on-verified,
-double-entry invariant); this feature productionizes them. Every money
+§9.4 and demonstrated in the PoC (deterministic units, pay-only-on-verified;
+the PoC's ledger check verifies record/rate consistency — SPEC-004 §3 — while
+full independently-legged double-entry is MB-001's deliverable); this
+feature productionizes them. Every money
 mutation is HIGH-RISK by definition.
 
 ## 2. Scope
@@ -89,3 +91,7 @@ policy, FT-05 integrates the vendor).
   OQ-1 dependency).
 - **OQ-MB-03** (owner: founder; default 7 days): escrow/clawback window
   before earnings are withdrawable.
+- **OQ-MB-04** (owner: founder; default $2/device/month with volume tiers):
+  private-pool list price (BUSINESS-ANALYSIS R2; priced in RMM/EDR
+  per-endpoint norms so the MSP channel can quote it) — annex to MB-003
+  pricing config.

@@ -27,7 +27,7 @@ FT-05; pilot deployments.
 
 **Out of scope:** MPC math (FT-01); batch job lifecycle (FT-02); agent
 execution substrate (FT-03 — FT-06 produces artifacts FT-03 runs); relay
-hosting choice (OQ-PF-01).
+hosting is settled by DR-PF-03 (Cloudflare Durable Objects).
 
 ## 3. Requirements
 

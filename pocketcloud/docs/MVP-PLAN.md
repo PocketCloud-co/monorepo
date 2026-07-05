@@ -53,6 +53,7 @@ Done per the Definition of Done.
 | PF-007 | coverage gates |
 | PF-010 | pipeline meta-suite |
 | SEC-003 | key management architecture (unblocks HA-005, PF-008) |
+| SEC-001, SEC-002 | threat-model ratification + sign-off CI check (must precede the first P0 merges per SEC-R1) |
 | OO-001 | telemetry schema + scrubber |
 
 ### Wave 1 — Protocol core in production form
@@ -81,6 +82,7 @@ Done per the Definition of Done.
 | HA-009 | churn resilience |
 | CP-014 | pool tenancy in placement (private pools, DR-08) |
 | SDK-001, SDK-002, SDK-003 | Python SDK: lifecycle, quotes/budgets, idempotency |
+| SDK-006 | privacy params API (n, t, r, residency) with safe defaults |
 | SDK-010 | pool targeting + org auth |
 
 ### Wave 3 — Money (the seam, the ledger, the payouts)
@@ -100,6 +102,8 @@ Done per the Definition of Done.
 | Task | What |
 |---|---|
 | PF-008 | reproducible signed agent builds |
+| PF-009 | release process + channels |
+| MB-011 | 1099/tax export |
 | HA-006 | signed auto-update |
 | HA-008 | artifact cache |
 | HA-011 | fleet (org) enrollment — org-sovereign policy + transparency notice |
@@ -107,7 +111,6 @@ Done per the Definition of Done.
 | OO-002..OO-006 | dashboards, SLOs, canaries (OO-004), alerting, runbooks |
 | MB-007, MB-008 | reputation + fraud v0 |
 | MB-009, MB-010 | minimal consoles (Vercel) |
-| SEC-001, SEC-002 | threat-model ratification + CI check |
 | SEC-005, SEC-006 | KYC policy + legal pack v1 |
 | PF-011, OO-007 | chaos harness + seam chaos suite |
 

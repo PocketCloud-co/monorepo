@@ -29,6 +29,13 @@
 An imbalance is a P0: payouts freeze, humans paged (MB-R1). Implementations
 MUST expose `invariantHolds` and MUST NOT auto-correct an imbalance.
 
+**Scope honesty:** each leg must be computed from an independent source so
+the check can actually fail. v0 (PoC) computes the platform leg from
+`units × rate` independently of the stored `workerMillicredits`, so it
+detects rate/record inconsistencies — but full double-entry with
+independently-sourced legs (billing events vs receipt log vs payout rows)
+is MB-001's job; v0's check is necessary, not sufficient.
+
 ## 4. Billing rules (contract-tested)
 - Rejected attempts: receipt exists, `payable:false`, worth 0, customer
   billed 0 for that attempt.

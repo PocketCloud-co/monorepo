@@ -84,6 +84,10 @@ console.log(`max abs error    = ${maxErr1.toExponential(2)} (fixed-point roundin
 if (maxErr1 > 1e-3) throw new Error('demo 1 result mismatch');
 
 // Show what a single worker actually sees: uniform random field noise.
+// Reviewed waiver of the "never log shares" rule (Standards §6): this is a
+// FRESH, independent dealing made only for display, and exactly ONE of its
+// three shares is printed — a single share of an independent dealing is
+// information-theoretically uniform and reveals nothing about x.
 const peek = dealWithMac(encodeVector(x), 3, newMacKey())[0].share;
 console.log(
   `\nwhat ONE host sees for x (its share of the 4 values):\n  ` +

@@ -10,12 +10,16 @@
 `POST /jobs` →
 ```json
 { "template": "matvec" | "private-dot",
-  "n": 3,                  // share count (default 3)
-  "maxAttempts": 3,        // re-dispatch budget (default 3)
-  // matvec:      "matrix": [[float]], "input": [float]
-  // private-dot: "x": [float], "y": [float]
+  "n": 3,                  // share count: integer in [2, 16] (default 3);
+                           // n >= 2 is a privacy floor — n=1 would deliver
+                           // the encoded plaintext to one worker (SPEC-001 §3)
+  "maxAttempts": 3,        // re-dispatch budget: integer in [1, 10] (default 3)
+  // matvec:      "matrix": [[float]] non-empty rectangular, "input": [float] len == cols
+  // private-dot: "x": [float], "y": [float] non-empty, equal length
 }
 ```
+Validation happens at the boundary before any dealing or math; violations
+return 400 with a specific error (contract-tested), never a mid-protocol 500.
 200 (verified) →
 ```json
 { "ok": true, "jobId": "job-<seq>",

@@ -79,9 +79,9 @@ persistence and payouts (FT-05 — FT-02 *emits* receipts); LLM session relay
 
 ## 8. Open Questions
 
-- **OQ-CP-01** (owner: founder; default = OQ-PF-01 proposed split): hosting —
-  cell schedulers/relays/session state as Cloudflare Durable Objects + R2
-  share store; registry/ledger in Supabase Postgres. Ratify with OQ-PF-01.
+- ~~**OQ-CP-01**~~ — RESOLVED 2026-07-03 by **DR-PF-03**: cell schedulers /
+  relays / session state as Cloudflare Durable Objects + R2 share store;
+  registry/ledger in Supabase Postgres; consoles on Vercel.
 - **OQ-CP-02** (owner: eng; default: pull-based with signed work manifests):
   agent transport v1 — long-poll pull vs persistent WebSocket; decide with
   battery data from FT-03 mobile experiments (HA-007).

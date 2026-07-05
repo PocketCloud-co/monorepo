@@ -111,7 +111,7 @@ profiles) with org enrollment tokens — no per-employee onboarding.
 
 ### 5.1 The core user promise, stated precisely
 
-> For a job submitted with privacy parameters (n, t): the input data is split into *n* shares such that **any t−1 or fewer shares reveal zero information** about the data (information-theoretic, not "hard to compute" — literally zero, like a one-time pad). Each device receives shares from at most one share-index, so reconstructing the input requires **collusion of at least t devices chosen by the platform to be pairwise unrelated** (different owners, networks, geographies). Every result carries an unconditionally-checkable integrity tag; a device that modifies its computation is caught with probability ≥ 1 − 2⁻⁶⁴.
+> For a job submitted with privacy parameters (n, t): the input data is split into *n* shares such that **any t−1 or fewer shares reveal zero information** about the data (information-theoretic, not "hard to compute" — literally zero, like a one-time pad). Each device receives shares from at most one share-index, so reconstructing the input requires **collusion of at least t devices chosen by the platform to be pairwise unrelated** (different owners, networks, geographies). Every result carries an unconditionally-checkable integrity tag; a device that modifies its computation is caught with probability 1 − 1/p, where p is the MAC field size — ≥ 1 − 2⁻⁶¹ in the v0 reference implementation, ≥ 1 − 2⁻¹²⁷ with the 128-bit production field (CC-R3).
 
 This is the *true* version of the founding claim "no subset of machines can combine back the original workload." The honest qualifier — *no subset smaller than t* — is a feature, not a weakness: t is customer-chosen, collusion across strangers' living rooms is a fundamentally harder attack than compromising one cloud tenant, and the anti-collusion placement policy (§8.4) makes assembling t shares operationally unrealistic. Marketing must never drop the qualifier; auditors will not.
 
@@ -187,7 +187,7 @@ The MVP ships **templates**, not arbitrary code — this bounds both the securit
 - **Secret sharing:** additive sharing over a prime field 𝔽_p (p ≈ 2⁶¹−1 for the PoC; 128-bit for production). Data x is split as x = x₁ + x₂ + … + xₙ mod p with x₁…xₙ₋₁ uniform random. Any n−1 shares are jointly uniform ⇒ zero information. For t < n threshold flexibility and dropout tolerance, Shamir sharing (degree t−1 polynomials) is the Phase-2 upgrade; additive (t = n per share-group, with r redundant groups) ships first because it is simpler to verify and audit.
 - **Linear computation is free:** for public matrix W, each worker computes W·xᵢ locally; Σᵢ W·xᵢ = W·x. No inter-worker communication. This is why ML linear algebra is the launch workload.
 - **Multiplication (secret × secret):** Beaver triples dealt by the coordinator (Phase 1: trusted dealer; Phase 2: distributed triple generation). One round of masked-value exchange per multiplication layer.
-- **Integrity:** SPDZ-style unconditional MACs. Every secret x is accompanied by a sharing of α·x under a global MAC key α. All operations are performed on both. At reassembly, the verifier checks the MAC relation; a worker that alters its share of x must alter its share of α·x consistently, which requires guessing α — success probability ≤ 1/p ≈ 2⁻⁶¹. **The PoC implements exactly this and demonstrates a tampering worker being caught.**
+- **Integrity:** SPDZ-style unconditional MACs. Every secret x is accompanied by a sharing of α·x under a MAC key α sampled fresh per attempt. All operations are performed on both. At reassembly, the verifier checks the MAC relation; a worker that alters its share of x must alter its share of α·x consistently, which requires guessing α — success probability ≤ 1/p ≈ 2⁻⁶¹. **The PoC implements exactly this and demonstrates a tampering worker being caught.**
 - **Fixed-point encoding** for real-valued ML data (configurable scale; the PoC uses 2¹⁶) with documented precision bounds per template.
 - **Transport & identity:** mTLS with per-device certificates; agent binaries signed; share payloads additionally sealed to the worker's enrolled key so the coordinator's storage layer never holds a share it can open in strict mode.
 
@@ -412,8 +412,8 @@ The proof of concept in `pocketcloud/poc/` implements, in dependency-free Node.j
 | SPDZ-style MACs + tamper detection (§7.2, G2) | `src/crypto/secret-sharing.js` (MAC dealing), verification in `src/coordinator/` |
 | T1 private linear algebra (§6.4) | worker kernel `matvec` — private-input embedding/inference layer |
 | T3 Beaver-triple multiplication (§6.4) | `src/crypto/beaver.js` + coordinator dealer + two-round masked exchange |
-| Coordinator / dealer / verifier / reassembly (§8.1–8.2, managed mode) | `src/coordinator/server.js` |
-| Host agent computing on shares only (§5, F10 conceptually) | `src/worker/server.js` |
+| Coordinator / dealer / verifier / reassembly (§8.1–8.2, managed mode) | `src/coordinator/coordinator.js` |
+| Host agent computing on shares only (§5, F10 conceptually) | `src/worker/worker.js` |
 | Malicious-host detection demo (F5) | `--tamper` flag on a worker; demo shows MAC failure catching it |
 | Fixed-point real-number encoding (§7.2) | `src/crypto/encoding.js` |
 | Customer SDK/CLI (F1) | `src/client/client.js`, `demo.js` |

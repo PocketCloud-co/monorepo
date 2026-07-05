@@ -12,11 +12,16 @@
 | Feature-PRD framework (9 areas, trackers) | — | ✅ | `prds/` + CI integrity check |
 | CI on every PR | PF-001 | ✅ | green check runs on PR #1 |
 | Device runtime decision | HA-001 | ✅ | DEVICE-RUNTIME.md |
-| Hierarchy completion: project/milestone trackers + integration specs | PF-013 | 🔨 this commit | PROJECT-TRACKER.md, milestones/, specs/ |
-| Independent best-practices review gate defined + first full-stack review run | PF-014 | 🔨 this commit | Standards §9 + review report |
+| Hierarchy completion: project/milestone trackers + integration specs | PF-013 | ✅ | PROJECT-TRACKER.md, milestones/, specs/ + CI hierarchy check |
+| Independent best-practices review gate defined + first full-stack review run | PF-014 | ✅ | Standards §9 + [`reviews/2026-07-05-full-stack-M0.md`](../reviews/2026-07-05-full-stack-M0.md) |
 
 **Exit checklist:** [x] PoC suites green in CI · [x] 9 feature PRDs populated
-· [ ] PF-013/PF-014 Done · [ ] M0 review findings resolved.
+· [x] PF-013/PF-014 Done · [x] M0 review findings dispositioned (1 CRITICAL +
+4 MAJOR fixed, 10 findings fixed/waived — see review report).
+
+**M0 CLOSED 2026-07-05.**
 
 ## Change log
 - 2026-07-04: created; M0 near-complete pending PF-013/PF-014.
+- 2026-07-05: first §9 full-stack review passed-with-findings; all 15
+  findings dispositioned (see reviews/); PF-013/PF-014 Done; M0 closed.

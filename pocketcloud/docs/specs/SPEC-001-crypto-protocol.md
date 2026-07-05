@@ -21,6 +21,8 @@
   linear combination.
 
 ## 3. Additive secret sharing
+- **n ≥ 2 always** (privacy floor): with n = 1 the "share" IS the plaintext.
+  Implementations MUST reject n < 2 at the boundary; v0 also bounds n ≤ 16.
 - share(x, n): x = Σᵢ xᵢ mod p with x₁..x₍ₙ₋₁₎ uniform. Any n−1 shares are
   jointly uniform (zero information).
 - Vectors share element-wise; perWorker[i] is the i-th share of every element.

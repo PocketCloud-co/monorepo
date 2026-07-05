@@ -36,8 +36,12 @@ Response: `{ zShare, zMacShare }` (scalars: summed over elements).
 
 ## 3. Error handling
 - Unknown template → 400 `{ error }`. Kernel failure → 500 `{ error }`.
-- Coordinator treats non-200 as a dispatch failure: re-place per its
-  retry/quarantine policy; a worker MUST NOT return partial results.
+- A worker MUST NOT return partial results.
+- **v0 actual behavior:** a worker call failure (non-200, network error)
+  propagates as a job-level 500 to the customer — there is NO re-placement
+  or quarantine on dispatch failure in the PoC (quarantine applies only to
+  MAC-verification failures). Retry/re-placement on dispatch failure is
+  `TBD(CP-007)` and MUST be treated as absent until then.
 
 ## 4. Health
 `GET {worker}/health` → `{ workerId, ok: true }`.

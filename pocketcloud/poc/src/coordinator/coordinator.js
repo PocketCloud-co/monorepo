@@ -100,12 +100,20 @@ export async function createCoordinator({ port = 0 } = {}) {
     const payouts = {};
     let customerBilled = 0;
     let workerTotal = 0;
+    let platformTotal = 0;
     for (const r of ledger) {
       payouts[r.workerId] = (payouts[r.workerId] ?? 0) + r.workerMillicredits;
       workerTotal += r.workerMillicredits;
-      if (r.payable) customerBilled += r.units * CUSTOMER_MILLICREDITS_PER_UNIT;
+      if (r.payable) {
+        customerBilled += r.units * CUSTOMER_MILLICREDITS_PER_UNIT;
+        // Platform take computed INDEPENDENTLY of the stored worker amount,
+        // so the invariant below can actually fail (e.g. a receipt whose
+        // workerMillicredits was written at the wrong rate). Full
+        // double-entry with independently-sourced legs lands in MB-001.
+        platformTotal +=
+          r.units * (CUSTOMER_MILLICREDITS_PER_UNIT - WORKER_MILLICREDITS_PER_UNIT);
+      }
     }
-    const platformTotal = customerBilled - workerTotal;
     return {
       receipts: ledger,
       payoutsByWorker: payouts,
@@ -248,13 +256,57 @@ export async function createCoordinator({ port = 0 } = {}) {
   // the attempt's workers (production would use redundancy to pinpoint the
   // cheater; the PoC quarantines the whole attempt pending investigation)
   // and retry on a fresh set.
+  // Boundary validation (Standards §4: validate before any math runs).
+  // n >= 2 is a PRIVACY floor, not a tuning default: with n = 1 the single
+  // "share" is the encoded plaintext itself. SPEC-001 §3 / SPEC-003 §1.
+  function badRequest(msg) {
+    const err = new Error(msg);
+    err.status = 400;
+    return err;
+  }
+
+  const isFiniteNumberVector = (v) =>
+    Array.isArray(v) && v.length > 0 && v.every(Number.isFinite);
+
+  function validateJob(body) {
+    if (!WORK_UNITS[body.template]) {
+      throw badRequest(`unknown template ${body.template}`);
+    }
+    const n = body.n ?? 3;
+    if (!Number.isInteger(n) || n < 2 || n > 16) {
+      throw badRequest('n must be an integer in [2, 16] (n >= 2 is a privacy floor)');
+    }
+    const maxAttempts = body.maxAttempts ?? 3;
+    if (!Number.isInteger(maxAttempts) || maxAttempts < 1 || maxAttempts > 10) {
+      throw badRequest('maxAttempts must be an integer in [1, 10]');
+    }
+    if (body.template === 'matvec') {
+      const { matrix, input } = body;
+      if (
+        !Array.isArray(matrix) ||
+        matrix.length === 0 ||
+        !matrix.every((row) => isFiniteNumberVector(row) && row.length === matrix[0].length)
+      ) {
+        throw badRequest('matrix must be a non-empty rectangular array of finite numbers');
+      }
+      if (!isFiniteNumberVector(input) || input.length !== matrix[0].length) {
+        throw badRequest('input must be a finite-number vector matching matrix columns');
+      }
+    }
+    if (body.template === 'private-dot') {
+      const { x, y } = body;
+      if (!isFiniteNumberVector(x) || !isFiniteNumberVector(y) || x.length !== y.length) {
+        throw badRequest('x and y must be finite-number vectors of equal length');
+      }
+    }
+    return { n, maxAttempts };
+  }
+
   // Upfront quote: work units are a pure function of the job's shape, so
   // the customer can see the exact meter reading before anything runs.
   function estimateJob(body) {
-    const unitsFn = WORK_UNITS[body.template];
-    if (!unitsFn) throw new Error(`unknown template ${body.template}`);
-    const n = body.n ?? 3;
-    const unitsPerWorker = unitsFn(body);
+    const { n } = validateJob(body);
+    const unitsPerWorker = WORK_UNITS[body.template](body);
     return {
       template: body.template,
       n,
@@ -267,10 +319,8 @@ export async function createCoordinator({ port = 0 } = {}) {
   let jobSeq = 0;
 
   async function runJob(body) {
+    const { n, maxAttempts } = validateJob(body);
     const template = TEMPLATES[body.template];
-    if (!template) throw new Error(`unknown template ${body.template}`);
-    const n = body.n ?? 3;
-    const maxAttempts = body.maxAttempts ?? 3;
     const unitsPerWorker = WORK_UNITS[body.template](body);
     jobSeq += 1;
     const jobId = `job-${jobSeq}`;
@@ -353,7 +403,7 @@ export async function createCoordinator({ port = 0 } = {}) {
       }
       sendJson(res, 404, { error: 'not found' });
     } catch (err) {
-      sendJson(res, 500, { error: err.message });
+      sendJson(res, err.status ?? 500, { error: err.message });
     }
   });
 

@@ -68,8 +68,14 @@ docs/
   LS-, SEC-, OO-). IDs are permanent; never renumber.
 - **Statuses:** `Proposed → Ready → In Progress → In Review → Done`,
   plus `Blocked(<task-id or OQ-id>)` and `Dropped(<DR-id>)`.
-- **Dependencies:** listed by task ID; a task is not `Ready` until its deps
-  are `Done`.
+- **Dependencies:** listed by task ID. `Ready` means *spec-complete and
+  unblocked by decisions* — its requirements, acceptance criteria, and
+  governing specs/DRs are settled. A Ready task still may not *start* until
+  its dependency tasks are Done (execution order per MVP-PLAN).
+  `Blocked(<id or OQ>)` is reserved for tasks that cannot even be specified
+  or started because a decision or artifact is missing. (Amended 2026-07-05
+  per review finding F5 — the original "not Ready until deps Done" wording
+  contradicted practice across six trackers.)
 - **Priorities:** P0 (milestone-blocking), P1 (milestone-targeted), P2
   (opportunistic).
 - **Decision Records:** `DR-<feature>-<nn>`, dated, immutable; reversals are

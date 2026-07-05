@@ -9,8 +9,8 @@
 | ID | P | Title | Depends on | Acceptance criteria | Status | Artifacts |
 |----|---|-------|-----------|---------------------|--------|-----------|
 | CP-001 | P0 | Service skeleton + Job API v0 (Cloudflare Workers/DO per DR-PF-03) | PF-003 | submit/estimate/status/result endpoints; schema validation + size bounds on every input; e2e tests against ephemeral instance | Ready | |
-| CP-002 | P0 ⚠ | Registry + device identity (mTLS cert issuance) | CP-001 | enrollment issues per-device certs; revocation works; adversarial test: forged/expired cert rejected | Ready after CP-001 | |
-| CP-003 | P0 ⚠ | Placement solver with anti-collusion constraints | CP-002 | property test: no emitted placement violates §8.4 constraints; Sybil fixture fleet refused; infeasible request fails fast with actionable error | Ready after CP-002 | |
+| CP-002 | P0 ⚠ | Registry + device identity (mTLS cert issuance) | CP-001 | enrollment issues per-device certs; revocation works; adversarial test: forged/expired cert rejected | Ready | |
+| CP-003 | P0 ⚠ | Placement solver with anti-collusion constraints | CP-002 | property test: no emitted placement violates §8.4 constraints; Sybil fixture fleet refused; infeasible request fails fast with actionable error | Ready | |
 | CP-004 | P0 ⚠ | Dealer service (managed mode) | CC-031, CP-001 | deals via FT-01 bindings only; plaintext retention zero after dispatch (verified by test hooks); golden parity with PoC dealing | Proposed | |
 | CP-005 | P0 ⚠ | Verifier service | CC-031, CP-004 | orchestrates FT-01 checks incl. opening MACs; PoC-parity adversarial suite passes (tamper result, tamper opening) | Proposed | |
 | CP-006 | P0 | Share router (store-and-forward) | CP-001 | agents pull bundles / push result-shares over outbound-only connections; router storage opaque for strict bundles; bandwidth metered at router | Proposed | |

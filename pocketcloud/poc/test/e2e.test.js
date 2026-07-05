@@ -123,8 +123,41 @@ test('job fails cleanly when the fleet cannot satisfy n', async () => {
       template: 'matvec',
       matrix: W,
       input: x,
-      n: 50,
+      n: 16, // within the validation bound, above the 8-host fleet size
     }),
     /eligible workers/,
+  );
+});
+
+test('n=1 is rejected: a single "share" would be the plaintext', async () => {
+  await assert.rejects(
+    submitJob(coordinator.url, { template: 'matvec', matrix: W, input: x, n: 1 }),
+    /privacy floor/,
+  );
+});
+
+test('malformed inputs are rejected at the boundary, not mid-protocol', async () => {
+  await assert.rejects(
+    submitJob(coordinator.url, { template: 'matvec', matrix: [], input: [], n: 3 }),
+    /rectangular/,
+  );
+  await assert.rejects(
+    submitJob(coordinator.url, {
+      template: 'private-dot',
+      x: [1, 2],
+      y: [1, 2, 3],
+      n: 3,
+    }),
+    /equal length/,
+  );
+  await assert.rejects(
+    submitJob(coordinator.url, {
+      template: 'matvec',
+      matrix: W,
+      input: x,
+      n: 3,
+      maxAttempts: 0,
+    }),
+    /maxAttempts/,
   );
 });

@@ -170,7 +170,11 @@ for early-stage capital: *we grow capacity without buying it.*
   protection (default: 20–30% margin to the operating MSP; PDC is the
   design-partner MSP).
 - **OQ-MB-04** (R2): private-pool list price (default $2/device/mo, volume
-  tiers; annex to FT-05 pricing config).
+  tiers; annex to FT-05 pricing config — registered in FT-05 PRD §8).
+- **OQ-BIZ-03** (owner: founder; default: refresh before any investor or
+  public use): competitor traction/pricing figures in FEASIBILITY-GTM.md
+  §2 are training-knowledge [K] — re-verify with live sources and complete
+  the deferred adversarial verification pass (workflow `wf_7854635d-c4c`).
 
 ## Change log
 - 2026-07-03: created (first-principles + MBA pass); R1–R7 integrated as

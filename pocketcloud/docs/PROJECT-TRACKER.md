@@ -27,7 +27,7 @@
 
 | Milestone | Scope (one line) | Tracker | Status | Exit criteria ref |
 |---|---|---|---|---|
-| **M0** — PoC & Delivery Framework | protocol proven; standards/CI/frameworks live | [`milestones/M0-TRACKER.md`](milestones/M0-TRACKER.md) | 🔨 ~90% (review gate + spec extraction landing now) | ROADMAP §M0 |
+| **M0** — PoC & Delivery Framework | protocol proven; standards/CI/frameworks live | [`milestones/M0-TRACKER.md`](milestones/M0-TRACKER.md) | ✅ Closed 2026-07-05 (first §9 review passed with findings dispositioned — `reviews/2026-07-05-full-stack-M0.md`) | ROADMAP §M0 |
 | **M1** — Foundations | production skeletons, Rust core parity, gates enforced | [`milestones/M1-TRACKER.md`](milestones/M1-TRACKER.md) | ⬜ Ready to start (Wave 0/1 tasks Ready) | ROADMAP §M1 |
 | **M2** — Private Alpha (= MVP exit, DR-08) | managed-mode jobs, payout loop, **enterprise private pool live** | [`milestones/M2-TRACKER.md`](milestones/M2-TRACKER.md) | ⬜ | ROADMAP §M2 + MVP-PLAN §2 |
 | **M3** — Host Beta | public hosts, strict mode, Shamir, audit #1, LLM pilot | [`milestones/M3-TRACKER.md`](milestones/M3-TRACKER.md) | ⬜ | ROADMAP §M3 |
@@ -38,7 +38,7 @@
 
 | Feature | Tracker | Tasks | Done | In progress / Ready | Highest-risk open item |
 |---|---|---|---|---|---|
-| FT-00 Platform Foundations | [tracker](prds/FT-00-platform-foundations/TASK-TRACKER.md) | 13 | 1 (PF-001) | PF-002..007, PF-010 Ready | PF-008 signed reproducible builds ⚠ |
+| FT-00 Platform Foundations | [tracker](prds/FT-00-platform-foundations/TASK-TRACKER.md) | 14 | 3 (PF-001, 013, 014) | PF-002..007, PF-010 Ready | PF-008 signed reproducible builds ⚠ |
 | FT-01 Crypto Core | [tracker](prds/FT-01-crypto-core/TASK-TRACKER.md) | 12 | 0 (PoC = reference) | CC-001..CC-030 Ready | CC-030 parity gate ⚠ |
 | FT-02 Coordinator | [tracker](prds/FT-02-coordinator-control-plane/TASK-TRACKER.md) | 14 | 0 | CP-001 Ready | CP-003 anti-collusion placement ⚠ |
 | FT-03 Host Agent | [tracker](prds/FT-03-host-agent/TASK-TRACKER.md) | 18 | 1 (HA-001) | HA-002 next | HA-006 signed auto-update ⚠ |
@@ -46,7 +46,7 @@
 | FT-05 Marketplace/Billing | [tracker](prds/FT-05-marketplace-billing/TASK-TRACKER.md) | 14 | 0 | MB-001 Ready | MB-005 payout runs ⚠ |
 | FT-06 LLM Serving | [tracker](prds/FT-06-llm-serving/TASK-TRACKER.md) | 10 | 0 | LS-001 Ready (scale-out) | LS-004 relay ⚠ |
 | FT-07 Security/Compliance | [tracker](prds/FT-07-security-compliance/TASK-TRACKER.md) | 11 | 0 | SEC-001, SEC-003 Ready | SEC-003 key management ⚠ |
-| FT-08 Observability/Ops | [tracker](prds/FT-08-observability-ops/TASK-TRACKER.md) | 11 | 0 | OO-001 Ready | OO-004 canary indistinguishability ⚠ |
+| FT-08 Observability/Ops | [tracker](prds/FT-08-observability-ops/TASK-TRACKER.md) | 10 | 0 | OO-001 Ready | OO-004 canary indistinguishability ⚠ |
 
 (Exact counts live in the feature trackers; this table is a navigation
 snapshot refreshed at every milestone-tracker update, not a second source

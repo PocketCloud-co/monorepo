@@ -31,7 +31,7 @@ architecture (FT-02, with OQ-PF-01 below).
 
 | ID | Requirement | Priority | Milestone |
 |----|-------------|----------|-----------|
-| PF-R1 | Every PR to `master` runs the full gate sequence of Standards §2; merges blocked on all stages | P0 | M0 |
+| PF-R1 | Every PR to `master` runs the full gate sequence of Standards §2; merges blocked on all stages | P0 | M1 (M0 runs the PF-R2 subset) |
 | PF-R2 | PoC suite (19 tests + demo smoke) runs in CI on every PR touching `pocketcloud/` | P0 | M0 |
 | PF-R3 | Golden-transcript harness: record/replay protocol messages, quotes, ledgers; byte-diff with reviewer-approved updates only | P0 | M1 |
 | PF-R4 | Coverage gates: crypto core ≥95%, other packages ≥80%, ratcheting (may rise, never lowered without DR) | P0 | M1 |

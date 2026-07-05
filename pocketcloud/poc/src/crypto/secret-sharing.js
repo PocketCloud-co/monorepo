@@ -6,8 +6,8 @@
 // hardness assumption).
 //
 // Integrity: alongside every secret x we deal a sharing of m = alpha * x,
-// where alpha is a random MAC key held by the verifier for the lifetime of
-// one job. Linear operations are applied to both sharings. At reassembly the
+// where alpha is a random MAC key held by the verifier, sampled fresh for
+// each dispatch attempt. Linear operations are applied to both sharings. At reassembly the
 // verifier checks  reconstruct(m) == alpha * reconstruct(x). A worker that
 // perturbs its share of x by delta must perturb its MAC share by
 // alpha * delta to stay consistent — but it does not know alpha, so it is
