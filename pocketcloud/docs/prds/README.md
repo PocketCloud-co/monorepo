@@ -11,8 +11,14 @@ the two canon documents.
 ```
 docs/
 ├── PRD.md                     ← WHY and WHAT (product truth)
-├── ENGINEERING-STANDARDS.md   ← HOW, enforceably (binding on all work)
+├── ENGINEERING-STANDARDS.md   ← HOW, enforceably (binding; §9 = review gate)
 ├── ROADMAP.md                 ← WHEN (milestones ↔ features ↔ exit criteria)
+├── MVP-PLAN.md                ← ORDER (waves; binding sequencing, DR-PF-04)
+├── PROJECT-TRACKER.md         ← root tracker: project → milestones rollup
+├── milestones/M<n>-TRACKER.md ← milestone → deliverables → task IDs
+├── specs/SPEC-xxx.md          ← versioned integration contracts (build to
+│                                these, never to counterpart code)
+├── reviews/                   ← §9 independent review reports
 └── prds/
     ├── README.md              ← this file: the rules of the framework
     ├── _TEMPLATE/             ← copy to create a new feature area
@@ -20,7 +26,8 @@ docs/
         ├── PRD.md             ← feature-scoped requirements, contracts,
         │                        threat model, decision records
         └── TASK-TRACKER.md    ← every task: ID, deps, acceptance criteria,
-                                 status, artifacts, change log
+                                 status, artifacts, change log (SOURCE OF
+                                 TRUTH for task status; upper levels roll up)
 ```
 
 ## Feature areas

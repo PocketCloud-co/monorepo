@@ -152,3 +152,38 @@ consumers, bounded retry + DLQ, a documented degraded mode whose invariant is
 reconciliation against the source-of-truth log, and an explicit backpressure
 policy. New seams register in `docs/SEAMS.md` §3 before first production
 merge; every seam ships chaos + duplication tests (SEAMS §6).
+
+## 9. Independent best-practices review gate ("measure twice, cut once")
+
+A reviewer **who is not the author** (an AI review agent or a human) runs
+this checklist and files findings as tracker rows before the gate passes.
+Required: at every MVP-PLAN **wave close** (scope: the wave's diff-set), at
+every **milestone close** (scope: full stack), and on any ⚠ HIGH-RISK merge
+(scope: the PR).
+
+The reviewer's checklist (the definition of "best practices" for this
+project — extend via DR, never shrink):
+
+1. **Spec conformance** — implementations build to `docs/specs/` contracts;
+   no consumer couples to a producer's internals; TBDs not built *through*.
+2. **Standards conformance** — §1 DoD on sampled tasks; §2 gates unweakened;
+   §3 test layers present incl. adversarial per trust boundary; §5 deps
+   justified; §6 error/logging discipline.
+3. **Security posture** — feature threat models current (new interfaces =
+   new rows); no secret/share/key material in code, logs, or fixtures;
+   least-privilege preserved; HIGH-RISK approvals actually recorded.
+4. **Seam compliance** — every new boundary is in the SEAMS registry with
+   S1–S7 satisfied and chaos+duplication tests present.
+5. **Cross-document coherence** — PRDs/trackers/specs/roadmap don't
+   contradict; DR references resolve; grep for restated decisions finds
+   consistent copies; change logs current.
+6. **Simplicity check** — KISS/YAGNI: flag speculative abstraction,
+   duplicated logic, and anything a smaller design serves equally well.
+7. **Honesty check** — claims in docs and PR bodies are evidence-backed;
+   privacy/latency claims carry their stated qualifiers (DR-05, Mode-2/3
+   distinction).
+
+Findings triage: each finding becomes a tracker row (`Proposed`, or a
+defect) or a written waiver in the review report. The gate passes when
+every finding is dispositioned — not necessarily fixed, but never silent.
+Review reports live in `docs/reviews/<date>-<scope>.md`.

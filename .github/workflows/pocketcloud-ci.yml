@@ -55,3 +55,16 @@ jobs:
             test -f "$d/TASK-TRACKER.md" || { echo "missing TASK-TRACKER.md in $d"; exit 1; }
           done
           echo "framework structure OK"
+
+      - name: Tracking hierarchy complete (project, milestones, specs)
+        run: |
+          set -e
+          test -f pocketcloud/docs/PROJECT-TRACKER.md || { echo "missing PROJECT-TRACKER.md"; exit 1; }
+          for m in M0 M1 M2 M3 M4 M5; do
+            test -f "pocketcloud/docs/milestones/$m-TRACKER.md" || { echo "missing milestones/$m-TRACKER.md"; exit 1; }
+          done
+          test -f pocketcloud/docs/specs/README.md || { echo "missing specs/README.md"; exit 1; }
+          for n in 001 002 003 004 005 006 007; do
+            ls pocketcloud/docs/specs/SPEC-$n-*.md >/dev/null 2>&1 || { echo "missing SPEC-$n"; exit 1; }
+          done
+          echo "hierarchy OK"

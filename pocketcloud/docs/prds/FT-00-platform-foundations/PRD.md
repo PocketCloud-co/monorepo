@@ -86,6 +86,15 @@ test) must each be rejected by CI — this meta-suite runs on pipeline changes.
   tracker priorities express importance, MVP-PLAN expresses order. Scale-out
   work does not start while an MVP wave is incomplete, except where idle
   specialists have no MVP task available.
+- **DR-PF-05 (2026-07-04, founder direction):** "Measure twice, cut once" —
+  the independent best-practices review gate (Standards §9) is mandatory at
+  every wave close, milestone close, and ⚠ HIGH-RISK merge, performed by a
+  reviewer (AI agent or human) who is not the author, against the fixed §9
+  checklist. Findings are dispositioned as tracker rows or written waivers;
+  reports live in `docs/reviews/`. The tracking hierarchy is
+  PROJECT-TRACKER → milestones/ → feature trackers → specs/ (PF-013), and
+  implementations build to `docs/specs/` contracts, never to counterpart
+  code.
 
 ## 8. Open Questions
 

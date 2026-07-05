@@ -20,6 +20,8 @@
 | PF-010 | P0 | Pipeline meta-suite (known-bad PR fixtures) | PF-001, PF-006, PF-007 | each fixture (failing test, lowered coverage, secret, unaudited dep, deleted adversarial test) rejected by CI | Ready | |
 | PF-011 | P1 | Load/soak/chaos harness scaffold | PF-003 | nightly job spins ephemeral fabric, injects churn/partition/slow-host, reports against SLOs | Proposed | |
 | PF-012 | P1 | Dev environment bootstrap | PF-003 | one command from clean machine to running local fabric + green tests; documented in root README | Proposed | |
+| PF-013 | P0 | Tracking hierarchy completion (project + milestone trackers, integration specs) | — | PROJECT-TRACKER.md + milestones/M0..M5 + specs/SPEC-001..007 exist; CI verifies structure; feature trackers remain the task source of truth | In Progress (this commit) | docs/PROJECT-TRACKER.md, docs/milestones/, docs/specs/ |
+| PF-014 | P0 | Independent best-practices review gate (Standards §9) + first full-stack review | PF-013 | §9 checklist codified; review-report convention (`docs/reviews/`); first full-stack review executed with all findings dispositioned as tracker rows or waivers | In Progress (this commit) | Standards §9; docs/reviews/ |
 
 ## Change log
 
