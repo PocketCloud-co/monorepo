@@ -21,7 +21,8 @@
 | CP-011 | P1 | Placement perf target | CP-003 | nightly load run: n=1000 placement < 5 s at 10⁵ simulated devices | Proposed | |
 | CP-012 | P1 ⚠ | Transparency log of placement decisions | CP-010 | append-only, hash-chained, externally verifiable; documented verification procedure | Proposed | |
 | CP-013 | P0 ⚠ | Metering seam producer: receipts in DO txn + R2 hash-chained log + Queue enqueue | CP-007 | SEAMS.md §4 flow implemented; chaos test (Supabase down mid-flow) shows zero loss after drain; duplication test passes; watermark metrics exported | Proposed | |
-| CP-014 | P0 ⚠ | Pool tenancy in placement (F19, MVP per DR-08) | CP-003 | pool_id is a hard placement constraint: property test proves no cross-pool placement in either direction; private-pool jobs with no burst policy fail fast rather than leak to public; org-scoped API keys enforced at job intake | Proposed | |
+| CP-014 | P0 ⚠ | Pool tenancy in placement (F19, MVP per DR-08) | CP-003, CP-015 (floor design) | pool_id is a hard placement constraint: property test proves no cross-pool placement in either direction; private-pool jobs with no burst policy fail fast rather than leak to public; org-scoped API keys enforced at job intake; placement respects the CP-015 anti-collusion floor | Proposed | |
+| CP-015 | P0 ⚠ | Pool anti-collusion floor + enrollment-token lifecycle (SEC-001 gap 1) | CP-002, HA-005 | non-relaxable floor defined (distinct physical device, one share index per device) with FT-07 sign-off; K10 tokens short-lived/attestation-bound/single-use with org approval queue; property test: no pool policy can place ≥ t share indices on colluding-capable devices; MUST merge before CP-014 | Proposed | |
 
 ## Change log
 

@@ -40,12 +40,12 @@
 |---|---|---|---|---|---|
 | FT-00 Platform Foundations | [tracker](prds/FT-00-platform-foundations/TASK-TRACKER.md) | 14 | 3 (PF-001, 013, 014) | PF-002..007, PF-010 Ready | PF-008 signed reproducible builds ⚠ |
 | FT-01 Crypto Core | [tracker](prds/FT-01-crypto-core/TASK-TRACKER.md) | 12 | 0 (PoC = reference) | CC-001..CC-030 Ready | CC-030 parity gate ⚠ |
-| FT-02 Coordinator | [tracker](prds/FT-02-coordinator-control-plane/TASK-TRACKER.md) | 14 | 0 | CP-001 Ready | CP-003 anti-collusion placement ⚠ |
-| FT-03 Host Agent | [tracker](prds/FT-03-host-agent/TASK-TRACKER.md) | 18 | 1 (HA-001) | HA-002 next | HA-006 signed auto-update ⚠ |
-| FT-04 Customer SDK | [tracker](prds/FT-04-customer-sdk/TASK-TRACKER.md) | 10 | 0 | blocked on CP-001 | SDK-004/005 strict mode ⚠ |
-| FT-05 Marketplace/Billing | [tracker](prds/FT-05-marketplace-billing/TASK-TRACKER.md) | 14 | 0 | MB-001 Ready | MB-005 payout runs ⚠ |
+| FT-02 Coordinator | [tracker](prds/FT-02-coordinator-control-plane/TASK-TRACKER.md) | 15 | 0 | CP-001 Ready | CP-015 pool anti-collusion floor ⚠ |
+| FT-03 Host Agent | [tracker](prds/FT-03-host-agent/TASK-TRACKER.md) | 20 | 1 (HA-001) | HA-002 next | HA-019 MDM-channel integrity ⚠ |
+| FT-04 Customer SDK | [tracker](prds/FT-04-customer-sdk/TASK-TRACKER.md) | 11 | 0 | blocked on CP-001 | SDK-004/005 strict mode ⚠ |
+| FT-05 Marketplace/Billing | [tracker](prds/FT-05-marketplace-billing/TASK-TRACKER.md) | 15 | 0 | MB-001 Ready | MB-005 payout runs ⚠ |
 | FT-06 LLM Serving | [tracker](prds/FT-06-llm-serving/TASK-TRACKER.md) | 10 | 0 | LS-001 Ready (scale-out) | LS-004 relay ⚠ |
-| FT-07 Security/Compliance | [tracker](prds/FT-07-security-compliance/TASK-TRACKER.md) | 11 | 0 | SEC-001, SEC-003 Ready | SEC-003 key management ⚠ |
+| FT-07 Security/Compliance | [tracker](prds/FT-07-security-compliance/TASK-TRACKER.md) | 13 | 2 (SEC-001, SEC-003) | SEC-002 next | K4 release-signing ceremony ⚠ |
 | FT-08 Observability/Ops | [tracker](prds/FT-08-observability-ops/TASK-TRACKER.md) | 10 | 0 | OO-001 Ready | OO-004 canary indistinguishability ⚠ |
 
 (Exact counts live in the feature trackers; this table is a navigation

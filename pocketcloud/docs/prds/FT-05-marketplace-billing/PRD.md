@@ -63,6 +63,7 @@ policy, FT-05 integrates the vendor).
 | Customer fraud | chargebacks after consuming results, budget abuse | quotes precommitted, receipts as evidence, spend caps, KYC above threshold (FT-07 policy) |
 | Insider / bug | ledger manipulation | append-only + hash-chained ledger, invariant monitor halts payouts, dual review on money-path merges (⚠), audit trail |
 | Payment vendor failure | payouts stall | payout retry queue, vendor-status runbook (FT-08), no double-pay on retry (idempotency) |
+| Console account takeover (SEC-001 gap 3) | phished host credentials ⇒ change payout destination, drain accrued earnings | step-up auth (OTP) on payout-destination change; escrow window (OQ-MB-03) blocks immediate withdrawal; notification to prior contact — MB-015 ⚠ |
 
 ## 6. QA requirements
 

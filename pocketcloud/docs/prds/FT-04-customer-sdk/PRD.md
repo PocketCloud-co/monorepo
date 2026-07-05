@@ -53,6 +53,7 @@ implementations (FT-01 — bindings only, DR-CC-02).
 | MITM / malicious endpoint | swap results, replay | mTLS + pinned coordinator identity; MAC verification client-side (strict); idempotency tokens |
 | Malicious result injection | convince SDK a forged result verified | verification code paths property-tested; adversarial fixtures from FT-01 suite reused here |
 | Developer misuse | accidental plaintext in managed mode when strict intended | privacy mode is an explicit required parameter; `strict` is the documented default for privacy templates from M3 (DR below) |
+| SDK supply-chain / stolen customer credential (SEC-001 gap 7) | backdoored PyPI/npm release leaks plaintext before dealing; stolen API key submits jobs or exfiltrates results as the customer | signed, pinned SDK releases with reproducible builds (PF-006/PF-008 machinery reused); published install hashes; scoped revocable API keys; key-use anomaly alerts — SDK-011 |
 
 ## 6. QA requirements
 

@@ -60,6 +60,8 @@ persistence and payouts (FT-05 — FT-02 *emits* receipts); LLM session relay
 | Malicious worker | corrupt results, drop work, stall | verification (FT-01 checks orchestrated here), deadline-aware re-dispatch, quarantine, receipts unpayable |
 | Compromised coordinator node | read managed-mode plaintext during dealing; bias placement | strict mode removes dealing (FT-04); dealer isolated per role, minimal retention, audited; transparency log exposes placement bias |
 | Malicious customer | oversized/malformed payloads, resource exhaustion | schema validation + size bounds at boundary (Standards §4); quotas, budget caps |
+| Pool-token attacker (SEC-001 gap 1) | leaked org enrollment token / pool foothold ⇒ enrolls rogue devices into a pool with relaxed anti-collusion; collects ≥ t shares of one job | short-lived attestation-bound enrollment tokens (K10); org device-approval queue; **non-relaxable anti-collusion floor** (distinct physical device + one share index per device) that pool policy can never go below — CP-015 ⚠ |
+| Network adversary (master §7.1 row, SEC-001 gap 9) | intercepts share traffic | mTLS with per-device certs (CP-002); outbound-only router (CP-006); shares individually worthless by construction |
 
 ## 6. QA requirements
 

@@ -61,6 +61,9 @@ deep-links to them).
 | Compromised update channel | ship malware to the fleet | signed updates, staged rollout, reproducible builds (PF-008), rollback; update keys HSM-held ⚠ |
 | Malicious artifact | model file exploits parser | artifacts are data parsed by hardened loaders inside the sandbox; fuzzed parsers (QA below); size/schema bounds before parse |
 | Local malware on host | steal device key, fake work | OS keystore/TPM-backed device keys where available; attestation; anomaly detection (FT-05 fraud) |
+| Compromised MDM/RMM tenant (SEC-001 gap 2) | pushes malicious owner-policy or install package to a whole corporate fleet; abuses employees' hardware; suppresses transparency notice | policy/package signatures verified against a platform key independent of the MDM channel; transparency notice non-suppressible by org policy; monotonic restriction (local can only tighten, SPEC-005 §3); caps floor — HA-019 ⚠ |
+| Tier-W web-agent host (SEC-001 gap 5) | free-to-mint browser identities (Sybil); page-context tampering with the WASM agent | probation-only trust class, never sole share-index holder (F15); per-origin identity clustering feeds fraud engine; sealed agent bundle + SRI — threat model detail in SEC-012 |
+| Curious serving host (owns FT-06's KV row per SEC-001 gap 4) | reads KV-cache residue after an LLM session | session-key-encrypted KV at rest, wiped on close, enforced by the agent — HA-020 ⚠ |
 
 ## 6. QA requirements
 

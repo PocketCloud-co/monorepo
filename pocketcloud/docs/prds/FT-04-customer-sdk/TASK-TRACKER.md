@@ -17,6 +17,7 @@
 | SDK-007 | P1 | TypeScript SDK (parity with Python v0) | SDK-001..003, CC-031 | same contract tests green; API parity table in docs | Proposed | |
 | SDK-008 | P1 | Examples gallery + quickstarts | SDK-001 | every example runs in CI; quickstart ≤10 min for a new dev (timed by a fresh tester) | Proposed | |
 | SDK-009 | P1 | Verification-transcript + receipt export | SDK-005, MB-002 | customer can export job audit bundle (transcript, receipts, quote-vs-bill) as JSON | Proposed | |
+| SDK-011 | P1 ⚠ | Signed SDK releases + API-key scoping/revocation (SEC-001 gap 7) | SDK-001, PF-008 | releases signed with published hashes, reproducible; API keys scoped (pool/template/budget) and revocable; anomaly alert fixture; supply-chain test: tampered package rejected by documented verification flow | Proposed | |
 | SDK-010 | P0 ⚠ | Pool targeting + org auth (F19/F20, MVP per DR-08) | SDK-001, CP-014 | jobs name a pool (default: org's private pool for org-keyed credentials); SSO/API-key org scoping; contract test proves a private-pool credential cannot place public work and vice versa | Proposed | |
 
 ## Change log

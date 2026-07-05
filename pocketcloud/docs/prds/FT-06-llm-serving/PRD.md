@@ -56,7 +56,8 @@ hosting is settled by DR-PF-03 (Cloudflare Durable Objects).
 | Curious pipeline host | read activations to infer prompt content | sandwich mode (no tokens at edges); trust-dispersion placement; documented residual risk (Appendix B honesty) |
 | Malicious stage | corrupt hidden states / bias outputs | LS-R6 spot-checks vs replicas; session migration; reputation |
 | Relay operator (us) | read stream | frames sealed to client session key; relay counts, cannot decrypt |
-| KV-cache theft on host | extract conversation residue | cache encrypted at rest with session key, wiped on close; agent enforces (FT-03) |
+| KV-cache theft on host | extract conversation residue | cache encrypted at rest with session key, wiped on close; **owned by FT-03 task HA-020** (SEC-001 gap 4 resolved the ownership contradiction) |
+| Relay operator observing key setup (SEC-001 gap 12) | learns session key, decrypts frames | key agreement terminates at SDK and final stage only; relay never participates in key exchange; test: relay with a full frame log cannot decrypt (LS-R3 acceptance) |
 | Artifact tamper | poisoned expert weights | signed, content-addressed artifacts (FT-03 verifies); partitioner runs in CI with golden hashes |
 
 ## 6. QA requirements

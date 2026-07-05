@@ -80,6 +80,7 @@ Done per the Definition of Done.
 | HA-005 | device identity/attestation |
 | HA-007 | owner policy UX (tray) |
 | HA-009 | churn resilience |
+| CP-015 | pool anti-collusion floor + enrollment-token lifecycle (SEC-001; before CP-014) |
 | CP-014 | pool tenancy in placement (private pools, DR-08) |
 | SDK-001, SDK-002, SDK-003 | Python SDK: lifecycle, quotes/budgets, idempotency |
 | SDK-006 | privacy params API (n, t, r, residency) with safe defaults |
@@ -107,7 +108,9 @@ Done per the Definition of Done.
 | HA-006 | signed auto-update |
 | HA-008 | artifact cache |
 | HA-011 | fleet (org) enrollment — org-sovereign policy + transparency notice |
+| HA-019 | MDM-channel integrity + non-suppressible transparency notice (SEC-001; before HA-017) |
 | HA-017 | MDM silent-install packages + org enrollment tokens |
+| MB-015 | payout-detail-change protection (SEC-001) |
 | OO-002..OO-006 | dashboards, SLOs, canaries (OO-004), alerting, runbooks |
 | MB-007, MB-008 | reputation + fraud v0 |
 | MB-009, MB-010 | minimal consoles (Vercel) |

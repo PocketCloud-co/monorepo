@@ -38,7 +38,10 @@
 - Policy changes take effect ≤ 60 s; running work is checkpointed or
   abandoned cleanly (HA-009), never grandfathered past the new caps.
 - Org policies distribute via MDM (HA-017); a device-local user may
-  further RESTRICT an org policy, never loosen it.
+  further RESTRICT an org policy, never loosen it. Enforcement: policy
+  objects are SIGNED by their issuer and verified by the agent against a
+  platform key independent of the MDM channel; the agent enforces monotonic
+  restriction and a non-suppressible transparency notice — `TBD(HA-019)`.
 
 ## 4. Conformance
 Cap-conformance suite per platform (HA-004): sustained load must respect
