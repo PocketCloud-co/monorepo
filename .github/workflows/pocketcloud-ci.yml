@@ -49,6 +49,10 @@ jobs:
         working-directory: pocketcloud/platform/placement
         run: node --test 'test/*.test.js'
 
+      - name: Metering seam tests (CP-013/MB-013 — S1-S6 invariants)
+        working-directory: pocketcloud/platform/seam
+        run: node --test 'test/*.test.js'
+
   crypto:
     name: crypto core (Rust) - parity + property + adversarial
     runs-on: ubuntu-latest
@@ -85,6 +89,21 @@ jobs:
         working-directory: pocketcloud/platform/supabase
         # CI runner is non-root, so the script runs Postgres directly.
         run: bash tests/run-tests.sh
+
+  seam-postgres:
+    name: R2->Postgres seam - lag-not-loss + rebuild vs real Postgres
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install PostgreSQL
+        run: sudo apt-get update && sudo apt-get install -y postgresql
+      - name: Seam producer->consumer vs ephemeral Postgres schema (MB-013)
+        working-directory: pocketcloud/platform/seam
+        # CI runner is non-root, so the harness runs Postgres directly.
+        run: bash tests/run-pg-integration.sh
 
   sdk-python:
     name: Python SDK - contract tests vs live coordinator
