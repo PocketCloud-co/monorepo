@@ -66,6 +66,25 @@ jobs:
       - name: Property + adversarial suites (CC-020)
         run: cargo test --features test-rng
 
+  sdk-python:
+    name: Python SDK - contract tests vs live coordinator
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pocketcloud/sdk/python
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install (dev)
+        run: pip install -e '.[dev]'
+      - name: Contract + adversarial tests (boots the PoC coordinator)
+        run: python -m pytest -q
+
   docs:
     name: PRD framework integrity
     runs-on: ubuntu-latest
