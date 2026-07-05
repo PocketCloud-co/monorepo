@@ -45,6 +45,10 @@ jobs:
         working-directory: pocketcloud/platform/ledger
         run: node --test 'test/*.test.js'
 
+      - name: Placement + pool-isolation tests (CP-014/CP-015)
+        working-directory: pocketcloud/platform/placement
+        run: node --test 'test/*.test.js'
+
   crypto:
     name: crypto core (Rust) - parity + property + adversarial
     runs-on: ubuntu-latest

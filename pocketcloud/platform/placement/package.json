@@ -1,0 +1,14 @@
+{
+  "name": "@pocketcloud/placement",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Worker-placement solver with anti-collusion constraints (PRD §8.4), private-pool isolation (CP-014), and the non-relaxable collusion floor + enrollment-token lifecycle (CP-015, SEC-001 gap 1). Zero dependencies.",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "license": "UNLICENSED"
+}
