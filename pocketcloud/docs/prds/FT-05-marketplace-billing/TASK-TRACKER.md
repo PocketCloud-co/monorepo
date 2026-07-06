@@ -20,7 +20,7 @@
 | MB-010 | P0 | Customer console v0 | MB-006 | jobs, spend, budgets, verification-transcript download | Proposed | |
 | MB-011 | P1 ⚠ | 1099/tax export | MB-005 | 1099-NEC/K data export matches ledger to the cent for fixture year | Proposed | |
 | MB-012 | P1 | Dispute flow from receipts | MB-006, SDK-009 | documented flow; both parties retrieve identical signed evidence bundle | Proposed | |
-| MB-013 | P0 ⚠ | Metering seam consumer + reconciliation + rebuild runbook | MB-001, CP-013 | idempotent queue consumer (ON CONFLICT DO NOTHING); hourly R2-log↔ledger reconciliation pages on divergence and freezes payouts; payout/invoice runs refuse on stale watermark; full ledger rebuild from R2 log rehearsed and documented | Proposed | |
+| MB-013 | P0 ⚠ | Metering seam consumer + reconciliation + rebuild runbook | MB-001, CP-013 | idempotent queue consumer (ON CONFLICT DO NOTHING); hourly R2-log↔ledger reconciliation pages on divergence and freezes payouts; payout/invoice runs refuse on stale watermark; full ledger rebuild from R2 log rehearsed and documented | In Review | `platform/seam/` (consumer + reconcile + rebuild + freshness watermark, zero-dep). DONE: idempotent consumer proven against the REAL `pc.receipts` schema (`ON CONFLICT (receipt_id) DO NOTHING` — duplicate delivery yields one row, real SQL); reconciliation returns a converged go/no-go and detects a projection that fell behind (S6); stale-watermark `canSettle()` guard refuses payouts (S5); **full rebuild-from-R2 rehearsed** — truncate `pc.receipts`, rebuild from the log alone, reconcile converges — in the ephemeral-Postgres CI harness (S8). NOT DONE (deployment, tracked): wire the hourly reconciliation cron + PagerDuty divergence alert; persist the watermark to `pc.ledger_watermark`; write the human-facing rebuild runbook doc. Needs ⚠ human approver before Done. |
 | MB-014 | P0 ⚠ | Showback/chargeback for private pools (F21, MVP per DR-08) | MB-002 | per-pool, per-team/project usage reports rendered from the same receipts; payouts disabled per pool config with ledger invariant still balancing (platform side = license, not take); SaaS license billing line per pool; property test (SEC-001 gap 11): a pool cannot simultaneously disable payouts AND accrue worker millicredits | Proposed | |
 | MB-015 | P0 ⚠ | Payout-detail-change protection (SEC-001 gap 3) | MB-004 | step-up auth (OTP) required on payout-destination change; change notifies prior contact; interacts correctly with escrow window (no withdrawal until window passes post-change); adversarial test with phished-credential fixture | Proposed | |
 
@@ -46,3 +46,13 @@
   against a real ephemeral Postgres 16 in a new CI job. Also advances FT-02
   CP-002 (registry) and CP-015 (token lifecycle in SQL). Remaining for MB-001
   Done: the R2→Postgres seam (MB-013/CP-013) + alerting.
+- 2026-07-05: MB-013 metering-seam **consumer + reconciliation + rebuild**
+  delivered as zero-dep module `platform/seam/` (paired with CP-013 producer).
+  Idempotent consumer + reconcile + rebuild-from-R2 proven against the REAL
+  `pc.receipts` schema via a new ephemeral-Postgres integration harness
+  (`tests/run-pg-integration.sh`), plus 11 portable seam tests (S1-S6, tamper,
+  cross-partition anchoring) — both wired into `pocketcloud-ci`. This is the
+  SEAMS §4 reference design making "Supabase down = lag, never loss" real and
+  tested. Moved to In Review (⚠ needs human approver + reconciliation cron /
+  divergence alerting / watermark persistence / rebuild runbook doc before
+  Done). Unblocks MB-001 → Done once alerting ships.
